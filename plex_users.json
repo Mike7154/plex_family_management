@@ -1,0 +1,6 @@
+{"USERS":[
+    {"username":"put","Gender":"M", "DOB":"5-19-2013", "playlist":"z1_add"},
+    {"username":"managed","Gender":"M", "DOB":"8-7-2004", "playlist":"z2_add"},
+    {"username":"users","Gender":"M", "DOB":"7-30-2016", "playlist":"z3_add"},
+    {"username":"here","Gender":"F", "DOB":"10-14-2017", "playlist":"z4_add"}
+]}
