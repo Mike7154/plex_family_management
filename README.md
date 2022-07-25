@@ -16,8 +16,10 @@ I made this script to automate the management of plex users. This script include
 
     a. This script can automatically update a users shared restrictions to match their age. You must store the users birthdays in settings.py
 3. Approve/Unapprove movies through playlists
+
     a. This script allows you to approve a movie for a user by adding the movie to a specific playlist. (Allows you to approve on mobile)
 4. Auto label collections
+
     a. This script can automatically keep collection labels in sync with it's movie labels. This way users won't see empty collections and collections aren't hidden
 
 Prerequisites
