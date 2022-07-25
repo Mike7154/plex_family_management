@@ -39,6 +39,11 @@ def get_page(URL):
             URL = re.sub('II','2',URL)
             URL = re.sub('I','1',URL)
             page = requests.get(URL)
+            if page.status_code==404:
+                URL = URL = re.sub('and','',URL)
+                URL = re.sub('--','-',URL)
+                URL = re.sub('--','-',URL)
+                page = requests.get(URL)
     return page
 
 def get_age(date):
