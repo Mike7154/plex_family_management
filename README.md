@@ -8,7 +8,7 @@ I made this script to automate the management of plex users. This script include
 1. Common Sense Media Information
 
     a. This script can get parental information and add it to the movie summaries in plex if it can find the movie in common sense media
-    
+
     b. This script can get common sense media age recommendation and add it to the movies as labels to automatically approve age_appropriate content
        -Note:Not all movies can be found on common sense media due to slight name differences and missing movies. If someone finds a better way to find CSM movies
        -let me know, I imagine a programmer could find a better way. But it found 90+% of the movies on my server.
@@ -28,9 +28,10 @@ requirements.txt for python libraries
 I wrote this on Python 3.9. I'm not sure if older versions will work or not.
 
 How to run the script
-Update the settings.py file. To your needs
-Run the update_library.py file in python
-I just have a task scheduled to run the update_library.py file once per day on my server.
+
+Update the settings.py file to your needs.
+Run the update_library.py file in python.
+- I just have a task scheduled to run the update_library.py file once per day on my server.
 
 
 
