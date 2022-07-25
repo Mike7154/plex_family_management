@@ -1,7 +1,6 @@
 import csmedia
 import plex_functions
 from settings import *
-from importlib import reload
 from datetime import datetime
 now = datetime.now()
 plex = plex_functions.plex_connect()
