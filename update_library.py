@@ -156,17 +156,17 @@ def difference (list1, list2):
 if run_col_labels == True:
     collections = movies.search(libtype='collection')
     for col in collections:
-        cont = False
+        #cont = False
         print(col.title)
         labels = col.labels
         items = col.items()
         i_labels = []
-        for i in items:
-            if i.updatedAt > plex_functions.str_to_date(str(url_dict.get('Collections'))):
-                cont = True
-                break
-        if cont == False:
-            continue
+        #for i in items:
+        #    if i.updatedAt > plex_functions.str_to_date(str(url_dict.get('Collections'))):
+        #        cont = True
+        #        break
+        #if cont == False:
+        #    continue
         for i in items:
             i_labels.extend([l.tag for l in i.labels])
         i_labels = list(set(i_labels))
