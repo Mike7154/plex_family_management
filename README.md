@@ -8,10 +8,12 @@ I made this script to automate the management of plex users. This script include
 1. Common Sense Media Information
 
     a. This script can get parental information and add it to the movie summaries in plex if it can find the movie in common sense media
+    
     b. This script can get common sense media age recommendation and add it to the movies as labels to automatically approve age_appropriate content
        -Note:Not all movies can be found on common sense media due to slight name differences and missing movies. If someone finds a better way to find CSM movies
        -let me know, I imagine a programmer could find a better way. But it found 90+% of the movies on my server.
 2. Auto Manage User Restrictions
+
     a. This script can automatically update a users shared restrictions to match their age. You must store the users birthdays in settings.py
 3. Approve/Unapprove movies through playlists
     a. This script allows you to approve a movie for a user by adding the movie to a specific playlist. (Allows you to approve on mobile)
