@@ -15,7 +15,7 @@ users = {"users":[
     {"username":"kid1","gender":"M", "dob":"2015-01-19", "playlist":"kid1_add"},
     {"username":"kid2","gender":"M", "dob":"2011-09-27", "playlist":""},
     {"username":"kid3","gender":"M", "dob":"2011-12-25", "playlist":"kid3_add"},
-    {"username":"kid4","gender":"F", "dob":"2015-11-14", "playlist":"kid_4"}
+    {"username":"shared_kids","gender":"both", "dob":"2019-01-01", "playlist":"shared_account"}
 ]}
 #-------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ unapprove_label = ""
 use_unlabeled_label = True
 #- I like to add an "unlabeled" label so I can see all the movies that don't have a age label
 
-age_label_append = ""
+age_label_append = "+"
 #- This will append text to the end of an age label. Default label will be age (ie. 4, 5_girl, 10). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
 days_early = 0
 #- How many days before birthday should new age be approved?
@@ -62,6 +62,7 @@ gender_specific = True
 gender_specific_txt = ["_girl","_boy"]
 #-if true, it will approve age plus age_gender for each user. This just gives more control. (ie. only girls get the princess movies and boys get batman, if you so choose)
 #-but you would have to modify these labels manually to be "5_girl" etc
+#You can set an account to M F or both (for shared accounts that you want both content on)
 
 offset_playlist_approve = 3
 #-Just something I use personally. I like to give each kid their own movies, and they get excited about it.
