@@ -30,6 +30,10 @@ def remLabels(movie, labels):
         print(movie.title + ' removing ' + rl)
         movie.removeLabel(rl).reload()
 
+def remove_items_labels(items, labels):
+    for i in items:
+        remLabels(i, labels)
+
 def add_items_labels(items, labels):
     for i in items:
         for l in labels:
