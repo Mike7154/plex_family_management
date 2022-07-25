@@ -25,7 +25,7 @@ run_common_sense_media = True
 # -This tells whether or not you want to add common sense media data to movie summaries
 approve_common_sense_media_ages = True
 # -This will add a label for the age recommended by common sense media when label is missing
-#WARNING, THIS MAY AUTO APPROVE UNAPPROVED ITEMS UNLESS YOU USE THE unapprove_label BELOW OR ADD YOUR OWN AGE LABEL (ie. 18 etc)
+#WARNING, THIS MAY AUTO APPROVE UNAPPROVED ITEMS UNLESS YOU USE THE unapprove_label BELOW OR ADD YOUR OWN AGE LABEL (ie. 18+ etc)
 run_playlist_approve = True
 # -This tells whether to approve movies that are added to a users playlist.
 run_col_labels = True
@@ -55,7 +55,7 @@ use_unlabeled_label = True
 #- I like to add an "unlabeled" label so I can see all the movies that don't have a age label
 
 age_label_append = "+"
-#- This will append text to the end of an age label. Default label will be age (ie. 4, 5_girl, 10). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
+#- This will append text to the end of an age label. Default label will be age (ie. 4+, 5+_girl, 10+). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
 days_early = 0
 #- How many days before birthday should new age be approved?
 gender_specific = True
