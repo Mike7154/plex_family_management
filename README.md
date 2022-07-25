@@ -25,6 +25,7 @@ I wrote this on Python 3.9. I'm not sure if older versions will work or not.
 How to run the script
 Update the settings.py file. To your needs
 Run the update_library.py file in python
+I just have a task scheduled to run the update_library.py file once per day on my server.
 
 
 
