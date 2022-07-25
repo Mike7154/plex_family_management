@@ -6,6 +6,7 @@ PLEX FAMILY MANAGEMENT
 I made this script to automate the management of plex users. This script includes 4 parts. You can tweak these in settings.py
 
 1. Common Sense Media Information
+
     a. This script can get parental information and add it to the movie summaries in plex if it can find the movie in common sense media
     b. This script can get common sense media age recommendation and add it to the movies as labels to automatically approve age_appropriate content
        -Note:Not all movies can be found on common sense media due to slight name differences and missing movies. If someone finds a better way to find CSM movies
