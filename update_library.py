@@ -26,7 +26,7 @@ for u in users['users']:
     username = u['username']
     print(username)
     if plex_functions.user_exists(username) == False:
-        account.createHomeUser(username, plex, [movie_library])
+        account.createHomeUser(username, plex, libraries)
         account = plex_functions.plex_account()
     user = account.user(username)
     account.updateFriend(user,plex,filterMovies = {'label':labels}, filterTelevision = {'label':labels})
