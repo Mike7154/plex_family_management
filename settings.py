@@ -67,7 +67,7 @@ gender_specific_txt = ["_girl","_boy"]
 #-but you would have to modify these labels manually to be "5_girl" etc
 #You can set an account to M F or both (for shared accounts that you want both content on)
 
-offset_playlist_approve = 3
+offset_playlist_approve = 0
 #-Just something I use personally. I like to give each kid their own movies, and they get excited about it.
 #-With this I can add a movie to a kids playlist, and it adds it to his account and his age + offset
 #Set -1 if you want to add name tag with no age tag added
