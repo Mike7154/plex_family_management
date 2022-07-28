@@ -1,5 +1,5 @@
-# plex_family Management
-Hello. I am not a programmer, so if someone can help me out to make this easier to use/install, I would appreciate it. I wrote this script to manage my kids media through plex more easily and it's working well for me.  The goal was to have more control over what media kids are exposed to through plex. This means having a plex server with managed users. Currently this only works for movies and not TV, but I don't think TV would be difficult in the future
+# plex_family Management V 1.0.2
+Hello. I wrote this script to manage my kids media through plex more easily and it's working well for me.  The goal was to have more control over what media kids are exposed to through plex. This means having a plex server with managed users. This works for movies and TV shows, but I'm still tweaking it for TV
 
 
 PLEX FAMILY MANAGEMENT
@@ -25,7 +25,7 @@ I made this script to automate the management of plex users. This script include
 Prerequisites
 Plex pass is required to have managed users
 requirements.txt for python libraries
-I wrote this on Python 3.9. I'm not sure if older versions will work or not.
+I wrote this on Python 3.9. I have not tested it on previous versions.
 
 How to run the script
 
