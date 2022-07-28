@@ -1,8 +1,8 @@
 from plexapi.myplex import MyPlexAccount
-from datetime import datetime
 import time
 import json
 from settings import *
+from general_functions import *
 
 
 #Connect to Plex
@@ -56,24 +56,11 @@ def list_movie_age_labels(movie):
     return list(set(m_labels).intersection(a_labels))
 
 
-
-
-def str_to_date(str):
-    return datetime.strptime(str, '%Y-%m-%d')
-
-def get_age(date):
-    age = datetime.now()-date
-    age = age.total_seconds()
-    age = age/3600
-    age = age/24
-    age = age/365
-    return age
-
 def build_age_labels(age, gender = "", gender_specific = False):
     labels = []
     ages = range(1,age+1)
     for a in ages:
-        a = str(a) + age_label_append
+        a = age_label_prefix +str(a) + age_label_suffix
         labels.append(str(a))
         if gender_specific == True:
             if gender == "F" or gender =="both":
@@ -101,9 +88,6 @@ def playlist_exists(playlist, library):
     pl_list = [p.title for p in playlists]
     return playlist in pl_list
 
-def difference (list1, list2):
-   list_dif = [i for i in list1 if i not in list2]
-   return list_dif
 
 def get_labeled_movies(movies):
     a_labels = [unapprove_label]
@@ -118,21 +102,15 @@ def get_unlabeled_movies(movies):
     movies = difference(movies.all(),labeled_movies)
     return movies
 
-def load_dict(file):
-    f = open(file)
-    url_dict = json.load(f)
-    f.close()
-    return url_dict
 
-def write_dict(file, dict):
-    with open(file,"w") as convert_file:
-        convert_file.write(json.dumps(dict))
-
-def movies_to_run(all_movies, url_dict, update_freq = 0.5):
+def movies_to_run(lib, movies_dict, update_freq = 5):
     movies_to_skip = []
-    for k in url_dict:
-        date = str_to_date(url_dict.get(k))
-        if get_age(date) < update_freq:
+    for m in movies_dict:
+        v = url_dict.get(m)
+        mov = lib.getGuid(k)
+        c_age = get_age(str_to_date(url_dict.get(k)))
+        m_age = get_age(mov.originallyAvailableAt)
+        if m_age/c_age > update_age_factor and s_age < update_freq:
             movies_to_skip.append(k)
-    movies = [m for m in all_movies if m.title in movies_to_skip]
+    movies = [m for m in all_movies if m.guid in movies_to_skip]
     return difference(all_movies, movies)

@@ -5,6 +5,9 @@ plex_email = "YOUR_EMAIL"
 plex_password = "YOUR_PASSWORD"
 plex_server = "YOUR_SERVER"
 #I know it's not ideal to store the password here. I'll change it later
+
+libraries = ["Movies", "TV Shows"]
+#-name of media libraries that you want to run this script for
 #-------------------------------------------------------------------------
 
 #USERS
@@ -20,7 +23,7 @@ users = {"users":[
 #-------------------------------------------------------------------------
 
 #[RUN]
-#-------------------------------------------------------------------------
+#------------------------------------------------------------------------
 run_common_sense_media = True
 # -This tells whether or not you want to add common sense media data to movie summaries
 approve_common_sense_media_ages = True
@@ -40,22 +43,22 @@ run_auto_approve = True
 
 #[PLEX]
 #-------------------------------------------------------------------------
-movie_library = "Movies"
-#-name of media library
+
 unapprove_playlist = "Unapprove_All"
 #-Movies added to this playlist will become unapproved from everyone
 approve_playlist = "Approve_All"
 #-Movies added to this playlist will be approved for 1+
 
-unapprove_label = ""
+unapprove_label = "Unapproved"
 #- This is the unapprove label. If blank, common sense media might add it back.
 #--Make it something if you want to keep these from getting approved. You can add movies to the unapproved playlist
 
 use_unlabeled_label = True
 #- I like to add an "unlabeled" label so I can see all the movies that don't have a age label
 
-age_label_append = "+"
-#- This will append text to the end of an age label. Default label will be age (ie. 4+, 5+_girl, 10+). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
+age_label_prefix = "CS_"
+age_label_suffix = "+"
+#- This will append text to the beginning and end of an age label. Default label will be age (ie. 4+, 5+_girl, 10+). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
 days_early = 0
 #- How many days before birthday should new age be approved?
 gender_specific = True
@@ -69,6 +72,8 @@ offset_playlist_approve = 3
 #-With this I can add a movie to a kids playlist, and it adds it to his account and his age + offset
 #Set -1 if you want to add name tag with no age tag added
 
+update_collection_sync_freq = 7
+#- Updating the collection labels takes a while, so I choose not to update it every day
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
 #[CSM]
@@ -84,8 +89,12 @@ update_age_factor = 2
 #-------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------
-#Variables
-csm_base_URL = "https://www.commonsensemedia.org/movie-reviews/"
-bad_urls_json = "bad_urls.json"
-from plexapi.myplex import MyPlexAccount
-import json
+#Variables - don't change these
+csm_URLs = {
+    'base': 'https://www.commonsensemedia.org',
+    'movie': "https://www.commonsensemedia.org/search/category/movie/",
+    'tv': 'https://www.commonsensemedia.org/search/category/tv/',
+    'movie_reviews':'/movie-reviews/',
+    'tv_reviews': '/tv-reviews/' }
+library_types = ['movie','show']
+movie_dict_file = "movie_data.json"
