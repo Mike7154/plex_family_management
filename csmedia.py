@@ -118,7 +118,10 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
     updated = movie_dict.get('updated')
     if updated is not None: #Skip the movie if it's been updated recent enough. Whether or not found/verified
         updated = datetime.strptime(updated, '%Y-%m-%d')
-        m_age = get_age(movie.originallyAvailableAt)
+        oaa = movie.originallyAvailableAt
+        if oaa is None:
+            oaa = datetime.strptime('2010-01-01', '%Y-%m-%d')
+        m_age = get_age(oaa)
         s_age = get_age(updated)
         if m_age/s_age > update_age_factor and s_age < 5:
             return movie_dict
@@ -215,7 +218,7 @@ def remove_csm(movie):
             end = len(summary)
         else:
             end = m2.end()
-        s = summary[0:start-2]+summary[end:len(summary)]
+        s = summary[0:start]+summary[end:len(summary)]
     return s
 
 def CSM_approve_age(movie, lib_type = 'movie', url_dict = csm_URLs):#Download information from Common Sense media

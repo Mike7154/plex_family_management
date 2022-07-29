@@ -38,6 +38,9 @@ run_auto_approve = True
 # -'kids' label will be added to everyone for universal approval
 
 
+#[UNDO]
+CLEAN_LIBRARY = False
+#THIS WILL REMOVE ALL COMMON SENSE MEDIA INFORMATION AND TAGS AND UNLOCK THE SUMMARY FIELDS
 
 #-------------------------------------------------------------------------
 

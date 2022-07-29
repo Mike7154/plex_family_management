@@ -52,7 +52,7 @@ for library in libraries:
     movie_dict = load_dict(movie_dict_file)
     movies_to_run = all_movies
     c = 0
-    if run_common_sense_media==True:
+    if run_common_sense_media==True and CLEAN_LIBRARY == False:
         for movie in movies_to_run:
             #print(movie.title)
             if csmedia.should_i_get_csm(movie) == True:
@@ -78,7 +78,7 @@ for library in libraries:
     #If the settings.py file says to, this will add a label to each movie with a missing label. The label will match
     #the recommended age from common sense media
     c = 0
-    if approve_common_sense_media_ages==True:
+    if approve_common_sense_media_ages==True and CLEAN_LIBRARY == False:
         unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
         movies_to_run = unlabeled_movies
         for movie in movies_to_run:
@@ -100,10 +100,9 @@ for library in libraries:
     ###############################################################
     ####################################################################################################
 
-
     #Update movie sharing from Playlists
     #Movies added to the playlist will be shared with the user
-    if run_playlist_approve == True and library_type == 'movies':
+    if run_playlist_approve == True and CLEAN_LIBRARY == False and library_type == 'movies':
         #Unapprove playlist
         if unapprove_playlist != "":
             if plex_functions.playlist_exists(unapprove_playlist, movies) == False:
@@ -179,13 +178,25 @@ for library in libraries:
         print('Adding unlabeled to '+movie.title)
         movie.addLabel('Unlabeled').reload
     ############################################################
+    ####################################################################################################
+    #Clean Library - Remove common sense labels and Summaries
+    if CLEAN_LIBRARY == True:
+        for movie in all_movies:
+            print("cleaning " + movie.title)
+            s = csmedia.remove_csm(movie)
+            movie.editSummary(s, locked = False)
+            for label in plex_functions.build_age_labels(25, "both", gender_specific = True):
+                movie.removeLabel(label).reload
+        update_log("Cleaned Libraries, it's a good idea to refresh all metadata")
+
+    ####################################################################################################
     #Add and remove collection labels
     last_run = movie_dict.get("Collection")
+    last_run = last_run.get('updated')
     if last_run is None:
         movie_dict.update({'Collection':{"updated":"1900-01-01"}})
         last_run = now - deltatime(days=10)
     else:
-        last_run = last_run.get('updated')
         last_run = str_to_date(last_run)
 
     if run_col_labels == True and now - timedelta(days=update_collection_sync_freq) >= last_run:
@@ -217,7 +228,7 @@ for library in libraries:
             for l in labels_to_add:
                 print('adding  '+l+' to ' +col.title)
                 col.addLabel(l).reload()
-        movie_dict.update({"Collections":{"updated":now.strftime('%Y-%m-%d')}})
+        movie_dict.update({"Collection":{"updated":now.strftime('%Y-%m-%d')}})
     else:
         update_log("Skipping collection label updates (check settings for freq)")
     write_dict(movie_dict_file, movie_dict)
