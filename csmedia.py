@@ -81,7 +81,7 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
     for link in links:
         b = url_dict.get('base')
         link = link.get('href')
-        url = b+l
+        url = b + link
         if url not in urls and url not in skip_urls:
             urls.append(url)
     return urls
@@ -209,7 +209,7 @@ def check_csm(movie):
 
 def should_i_get_csm(movie):
     b = False
-    if notcheck_csm(movie) is False:
+    if check_csm(movie) is False:
         b = True
     else:
         if update_old_summaries is True:
