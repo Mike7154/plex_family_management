@@ -1,4 +1,4 @@
-# pylama:ignore=E202,E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -41,7 +41,7 @@ def add_items_labels(items, labels):
         for l in labels:
             i.addLabel(l).reload()
 
-def clear_labels(items, add_label = "", ignore_label ="", remove_labels = [] ):
+def clear_labels(items, add_label = "", ignore_label ="", remove_labels = []):
     for i in items:
         labels = list_movie_age_labels(i)
         labels.extend(remove_labels)

@@ -1,4 +1,4 @@
-# pylama:ignore=E202,E231,E265
+# pylama:ignore=E231,E265
 
 #[LOGIN]
 #-------------------------------------------------------------------------
@@ -99,6 +99,6 @@ csm_URLs = {
     'movie': "https://www.commonsensemedia.org/search/category/movie/",
     'tv': 'https://www.commonsensemedia.org/search/category/tv/',
     'movie_reviews':'/movie-reviews/',
-    'tv_reviews': '/tv-reviews/' }
+    'tv_reviews': '/tv-reviews/'}
 library_types = ['movie','show']
 movie_dict_file = "movie_data.json"
