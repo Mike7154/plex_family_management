@@ -1,4 +1,4 @@
-# pylama:ignore=E111,E117,E211,E225,E231,E302
+# pylama:ignore=E117,E211,E225,E231,E302
 
 import json
 from datetime import datetime
@@ -16,14 +16,14 @@ def get_age(date):
 
 
 def difference (list1, list2):
-   list_dif = [i for i in list1 if i not in list2]
-   return list_dif
+    list_dif = [i for i in list1 if i not in list2]
+    return list_dif
 
 def load_dict(file):
-     f = open(file)
-     url_dict = json.load(f)
-     f.close()
-     return url_dict
+    f = open(file)
+    url_dict = json.load(f)
+    f.close()
+    return url_dict
 
 def write_dict(file, dict):
     with open(file,"w") as convert_file:
