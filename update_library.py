@@ -1,3 +1,5 @@
+# pylama:ignore=E211,E225,E231,E251,E265,E303,E712,E741,W0401
+
 import csmedia
 import plex_functions
 from settings import *

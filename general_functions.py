@@ -1,3 +1,5 @@
+# pylama:ignore=E111,E117,E211,E225,E231,E302
+
 import json
 from datetime import datetime
 

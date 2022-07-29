@@ -1,3 +1,5 @@
+# pylama:ignore=E117,E202,E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+
 from plexapi.myplex import MyPlexAccount
 import time
 import json

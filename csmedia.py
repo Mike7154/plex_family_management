@@ -1,3 +1,5 @@
+# pylama:ignore=E211,E225,E271,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0612
+
 import requests
 import re
 import time
