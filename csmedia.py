@@ -1,4 +1,4 @@
-# pylama:ignore=E265,E271,E302,E712,E741,W0401,W0612
+# pylama:ignore=E271,E302,E712,E741,W0401,W0612
 
 import requests
 import re
@@ -41,29 +41,29 @@ def get_age(date):
     age = age/365
     return age
 
-#URL = "https://www.commonsensemedia.org/movie-reviews/paws-of-fury-the-legend-of-hank"
-#URL = "https://www.commonsensemedia.org/movie-reviews/spider-man-into-the-spider-verse"
+# URL = "https://www.commonsensemedia.org/movie-reviews/paws-of-fury-the-legend-of-hank"
+# URL = "https://www.commonsensemedia.org/movie-reviews/spider-man-into-the-spider-verse"
 def page_search(urls, search, lib, movie_dict):
     for u in urls:
         url = u
-        #print(u)
+        # print(u)
         page = requests.get(u)
         search_m = re.search(str(search), page.text)
         if search_m is not None:
             print(u)
             break
         else:
-            #page = requests.get('https://www.commonsensemedia.org/movie-reviews/moms-night-out')
-            #m2=re.search('imdb.com/title/tt[1234567890]*',page.text)
-            #non_decimal = re.compile(r'[^\d]+')
-            #imdb = non_decimal.sub('',m2.group(0))
-            #imdb = 'imdb://tt' + imdb
-            #lib.getGuid("imdb")
-            #dir(m2)
+            # page = requests.get('https://www.commonsensemedia.org/movie-reviews/moms-night-out')
+            # m2=re.search('imdb.com/title/tt[1234567890]*',page.text)
+            # non_decimal = re.compile(r'[^\d]+')
+            # imdb = non_decimal.sub('',m2.group(0))
+            # imdb = 'imdb://tt' + imdb
+            # lib.getGuid("imdb")
+            # dir(m2)
             page = None
             url = None
             time.sleep(0.4)  # I put this line in to offload Common Sense requests during large server get_search_results
-            #- The above line should only slow down the first server run
+            # - The above line should only slow down the first server run
     return [page, url]
 
 
@@ -87,7 +87,7 @@ def scrape_CSM_page(movie_dict, page):
         to_know = restrip(to_know, "Show more")
         to_know = restrip(to_know, "\n\n", "\n")
         to_know = restrip(to_know, "\n\n", "\n")
-        #print(to_know)
+        # print(to_know)
         age = cl_search_txt(soup, "span[class^=rating__age]")
         age = age.strip()
         non_decimal = re.compile(r'[^\d.]+')
@@ -97,7 +97,7 @@ def scrape_CSM_page(movie_dict, page):
         text = "[Common Sense Media]"
         text = text_add(text, age, " ")
         text = text_add(text, to_know, "\n")
-        #print(text)
+        # print(text)
         for d in div:
             x = restrip(d.text, "Not present", "")
             s = d["data-text"]
@@ -134,7 +134,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         imdb = 'NOMATCH'
     else:
         imdb = re.sub('imdb://', '', imdb[0])
-    #Check if the URL was verified against IMDB
+    # Check if the URL was verified against IMDB
     if movie_dict.get('verified') is True:
         url = movie_dict.get('url')
         page = requests.get(url)
@@ -176,7 +176,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         movie_dict.update({"verified": False})
         update_log(movie.title + ": Missing from Common Sense Media")
         return movie_dict
-    #print(url)
+    # print(url)
     movie_dict.update({"url": url})
     search_m = re.search(str(imdb), page.text)
     if search_m is not None:

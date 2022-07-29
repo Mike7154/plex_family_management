@@ -1,4 +1,4 @@
-# pylama:ignore=E265,E303,E712,E741,W0401
+# pylama:ignore=E303,E712,E741,W0401
 
 import csmedia
 import plex_functions
@@ -13,15 +13,15 @@ print(plex)
 
 
 ##################################################
-#from importlib import reload
-#reload(csmedia)
-#reload(plex_functions)
-#library = "Movies"
-#movie = all_movies[388]
+# from importlib import reload
+# reload(csmedia)
+# reload(plex_functions)
+# library = "Movies"
+# movie = all_movies[388]
 ####################################################################################################
-#Approve labels
-#If setting file allows. this will allow labels that match the child's age.
-#Update the usernames and birthdays in the settings
+# Approve labels
+# If setting file allows. this will allow labels that match the child's age.
+# Update the usernames and birthdays in the settings
 account = plex_functions.plex_account()
 for u in users['users']:
     labels = plex_functions.get_user_labels(u)
@@ -45,18 +45,18 @@ for library in libraries:
     all_movies = movies.all()
 
     ####################################################################################################
-    #COMMON SENSE MEDIA
-    #IF the settings.ini file sets to run this, it will get movie information for parents from Common Sense Media
-    #and add it to the movie summary. This includes information like language, nudity, and diverse representation
-    #as well as recommended ages
+    # COMMON SENSE MEDIA
+    # IF the settings.ini file sets to run this, it will get movie information for parents from Common Sense Media
+    # and add it to the movie summary. This includes information like language, nudity, and diverse representation
+    # as well as recommended ages
     #####################################################################################################
-    #Load bad_urls
+    # Load bad_urls
     movie_dict = load_dict(movie_dict_file)
     movies_to_run = all_movies
     c = 0
     if run_common_sense_media == True and CLEAN_LIBRARY == False:
         for movie in movies_to_run:
-            #print(movie.title)
+            # print(movie.title)
             if csmedia.should_i_get_csm(movie) == True:
                 if movie.guid not in movie_dict:
                     movie_dict.update({movie.guid: {'verified': False}})
@@ -72,13 +72,13 @@ for library in libraries:
                 else:
                     print(movie.title + ": Missing from Common Sense Media")
                 movie_dict.update({movie.guid: m_dict})
-            #else:
-                #print("Should skip. Common sense media already updated or not required")
+            # else:
+                # print("Should skip. Common sense media already updated or not required")
     write_dict(movie_dict_file, movie_dict)
     update_log("Updated Summaries for " + str(c) + " movies")
     ###############################################################
-    #If the settings.py file says to, this will add a label to each movie with a missing label. The label will match
-    #the recommended age from common sense media
+    # If the settings.py file says to, this will add a label to each movie with a missing label. The label will match
+    # the recommended age from common sense media
     c = 0
     if approve_common_sense_media_ages == True and CLEAN_LIBRARY == False:
         unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
@@ -98,14 +98,14 @@ for library in libraries:
     else:
         print("Skipping common sense media labels")
     update_log("Updated age labels for " + str(c) + " movies")
-    #END COMMON SENSE MEDIA SECTION
+    # END COMMON SENSE MEDIA SECTION
     ###############################################################
     ####################################################################################################
 
-    #Update movie sharing from Playlists
-    #Movies added to the playlist will be shared with the user
+    # Update movie sharing from Playlists
+    # Movies added to the playlist will be shared with the user
     if run_playlist_approve == True and CLEAN_LIBRARY == False and library_type == 'movies':
-        #Unapprove playlist
+        # Unapprove playlist
         if unapprove_playlist != "":
             if plex_functions.playlist_exists(unapprove_playlist, movies) == False:
                 i = [all_movies[1]]
@@ -120,8 +120,8 @@ for library in libraries:
             pl.removeItems(items)
         else:
             print("No unapprove playlist entered. Skipping")
-        #------------------------------------------------------------------------
-        #Approve playlist
+        # ------------------------------------------------------------------------
+        # Approve playlist
         if approve_playlist != "":
             if plex_functions.playlist_exists(approve_playlist, movies) == False:
                 i = [all_movies[1]]
@@ -136,9 +136,9 @@ for library in libraries:
             pl.removeItems(items)
         else:
             print("No unapprove playlist entered. Skipping")
-        #------------------------------------------------------------------------
+        # ------------------------------------------------------------------------
 
-        #User Playlists
+        # User Playlists
         for u in users['users']:
             playlist = u['playlist']
             username = u['username']
@@ -168,7 +168,7 @@ for library in libraries:
                 print("No user playlist entered. Skipping")
 
     ############################################################
-    #Remove unlabeled tag for any movie with age labels
+    # Remove unlabeled tag for any movie with age labels
     labeled_movies = plex_functions.get_labeled_movies(movies)
     movie_list = list(set(movies.search(label="Unlabeled")).intersection(labeled_movies))
     for movie in movie_list:
@@ -182,7 +182,7 @@ for library in libraries:
             movie.addLabel('Unlabeled')
     ############################################################
     ####################################################################################################
-    #Clean Library - Remove common sense labels and Summaries
+    # Clean Library - Remove common sense labels and Summaries
     if CLEAN_LIBRARY == True:
         for movie in all_movies:
             if "[Common Sense Media]" in movie.summary:
@@ -194,7 +194,7 @@ for library in libraries:
         update_log("Cleaned Libraries, it's a good idea to refresh all metadata")
 
     ####################################################################################################
-    #Add and remove collection labels
+    # Add and remove collection labels
     last_run = movie_dict.get("Collection")
     last_run = last_run.get('updated')
     if last_run is None:
@@ -207,16 +207,16 @@ for library in libraries:
         collections = movies.search(libtype='collection')
         col = collections[20]
         for col in collections:
-            #cont = False
+            # cont = False
             print(col.title)
             labels = col.labels
             items = col.items()
             i_labels = []
-            #for i in items:
+            # for i in items:
             #    if i.updatedAt + timedelta(days=2) > plex_functions.str_to_date(str(movie_dict.get('Collections'))):
             #        cont = True
             #        break
-            #if cont == False:
+            # if cont == False:
             #    continue
             for i in items:
                 i_labels.extend([l.tag for l in i.labels])
@@ -236,7 +236,7 @@ for library in libraries:
     else:
         update_log("Skipping collection label updates (check settings for freq)")
     write_dict(movie_dict_file, movie_dict)
-    #save URL dictionary of movies that I coulnd't find on CSM
+    # save URL dictionary of movies that I coulnd't find on CSM
 write_dict(movie_dict_file, movie_dict)
 
 

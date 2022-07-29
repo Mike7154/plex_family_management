@@ -1,4 +1,4 @@
-# pylama:ignore=E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -7,7 +7,7 @@ from settings import *
 from general_functions import *
 
 
-#Connect to Plex
+# Connect to Plex
 def plex_account():
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     account = MyPlexAccount(plex_email, plex_password)
