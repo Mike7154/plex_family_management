@@ -1,4 +1,4 @@
-# pylama:ignore=E251,E265,E303,E712,E741,W0401
+# pylama:ignore=E265,E303,E712,E741,W0401
 
 import csmedia
 import plex_functions
@@ -31,7 +31,7 @@ for u in users['users']:
         account.createHomeUser(username, plex, libraries)
         account = plex_functions.plex_account()
     user = account.user(username)
-    account.updateFriend(user, plex, filterMovies = {'label': labels}, filterTelevision = {'label': labels})
+    account.updateFriend(user, plex, filterMovies={'label': labels}, filterTelevision={'label': labels})
 
 ###############################################################
 ####################################################################################################
@@ -188,7 +188,7 @@ for library in libraries:
             if "[Common Sense Media]" in movie.summary:
                 print("cleaning " + movie.title)
                 s = csmedia.remove_csm(movie)
-                movie.editSummary(s, locked = False)
+                movie.editSummary(s, locked=False)
                 for label in plex_functions.list_movie_age_labels(movie):
                     movie.removeLabel(label).reload()
         update_log("Cleaned Libraries, it's a good idea to refresh all metadata")

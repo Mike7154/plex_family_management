@@ -1,4 +1,4 @@
-# pylama:ignore=E251,E261,E262,E265,E271,E302,E712,E741,W0401,W0612
+# pylama:ignore=E261,E262,E265,E271,E302,E712,E741,W0401,W0612
 
 import requests
 import re
@@ -12,14 +12,14 @@ def cl_search_txt(soup, class_str):
     container = soup.select(class_str)
     return container[0].text
 
-def restrip(str, find, replace = ""):
+def restrip(str, find, replace=""):
     out = str.replace(find, replace)
     return out.strip()
 
-def text_add(str, add, pretext = "\n"):
+def text_add(str, add, pretext="\n"):
     return str + pretext + add
 
-def build_url(movie_title, lib_type, dict = csm_URLs):
+def build_url(movie_title, lib_type, dict=csm_URLs):
     base_url = dict.get('base')
     if lib_type == library_types[0]:
         base_url = dict.get('movie')
@@ -67,10 +67,10 @@ def page_search(urls, search, lib, movie_dict):
     return [page, url]
 
 
-def get_search_results(URL, url_match, url_dict, skip_urls = []):
+def get_search_results(URL, url_match, url_dict, skip_urls=[]):
     search_page = requests.get(URL)
     soup = BeautifulSoup(search_page.content, 'html.parser')
-    links = soup.find_all('a', href = re.compile('^' + url_match))
+    links = soup.find_all('a', href=re.compile('^' + url_match))
     urls = []
     for l in links:
         b = url_dict.get('base')
@@ -116,7 +116,7 @@ def scrape_CSM_page(movie_dict, page):
         print(URL)
     return movie_dict
 
-def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):#Download information from Common Sense media
+def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):#Download information from Common Sense media
     updated = movie_dict.get('updated')
     if updated is not None: #Skip the movie if it's been updated recent enough. Whether or not found/verified
         updated = datetime.strptime(updated, '%Y-%m-%d')
@@ -223,7 +223,7 @@ def remove_csm(movie):
         s = summary[0:start]+summary[end:len(summary)]
     return s
 
-def CSM_approve_age(movie, lib_type = 'movie', url_dict = csm_URLs):#Download information from Common Sense media
+def CSM_approve_age(movie, lib_type='movie', url_dict=csm_URLs):#Download information from Common Sense media
     page = CSM_get_page(movie, lib_type, dict)
     print(page.status_code)
     if page is None:

@@ -1,4 +1,4 @@
-# pylama:ignore=E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -13,7 +13,7 @@ def plex_account():
     account = MyPlexAccount(plex_email, plex_password)
     return account
 
-def plex_connect(account = plex_account()):
+def plex_connect(account=plex_account()):
     plex = account.resource(plex_server).connect()
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     return plex
@@ -41,7 +41,7 @@ def add_items_labels(items, labels):
         for l in labels:
             i.addLabel(l).reload()
 
-def clear_labels(items, add_label = "", ignore_label ="", remove_labels = []):
+def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):
     for i in items:
         labels = list_movie_age_labels(i)
         labels.extend(remove_labels)
@@ -54,11 +54,11 @@ def clear_labels(items, add_label = "", ignore_label ="", remove_labels = []):
 def list_movie_age_labels(movie):
     m_labels = [i.tag for i in movie.labels]
     a_labels = [unapprove_label]
-    a_labels.extend(build_age_labels(25, gender = "both", gender_specific = True))
+    a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
     return list(set(m_labels).intersection(a_labels))
 
 
-def build_age_labels(age, gender = "", gender_specific = False):
+def build_age_labels(age, gender="", gender_specific=False):
     labels = []
     ages = range(1, age+1)
     for a in ages:
@@ -80,7 +80,7 @@ def get_user_labels(user):
     labels.extend(build_age_labels(age, gender, gender_specific))
     return labels
 
-def user_exists(username, account = plex_account()):
+def user_exists(username, account=plex_account()):
     account_users = account.users()
     user_list = [u.title for u in account_users]
     return username in user_list
@@ -93,10 +93,10 @@ def playlist_exists(playlist, library):
 
 def get_labeled_movies(movies):
     a_labels = [unapprove_label]
-    a_labels.extend(build_age_labels(25, gender = "both", gender_specific = True))
+    a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
     labeled_movies = []
     for l in a_labels:
-        labeled_movies = list(set(labeled_movies + movies.search(label = l)))
+        labeled_movies = list(set(labeled_movies + movies.search(label=l)))
     return labeled_movies
 
 def get_unlabeled_movies(movies):
@@ -105,7 +105,7 @@ def get_unlabeled_movies(movies):
     return movies
 
 
-def movies_to_run(lib, movies_dict, update_freq = 5):
+def movies_to_run(lib, movies_dict, update_freq=5):
     movies_to_skip = []
     for m in movies_dict:
         v = url_dict.get(m)
