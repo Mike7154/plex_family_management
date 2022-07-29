@@ -1,11 +1,11 @@
-# pylama:ignore=E271,E302,E712,E741,W0401,W0612
+# pylama:ignore=E302,E712,E741,W0401,W0612
 
 import requests
 import re
 import time
 from bs4 import BeautifulSoup
 from datetime import datetime
-from  settings import *
+from settings import *
 from general_functions import *
 
 def cl_search_txt(soup, class_str):
