@@ -1,4 +1,4 @@
-# pylama:ignore=E211,E225,E231,E251,E265,E303,E712,E741,W0401
+# pylama:ignore=E225,E231,E251,E265,E303,E712,E741,W0401
 
 import csmedia
 import plex_functions
@@ -124,7 +124,7 @@ for library in libraries:
         #Approve playlist
         if approve_playlist != "":
             if plex_functions.playlist_exists(approve_playlist, movies) == False:
-                i = [all_movies [1]]
+                i = [all_movies[1]]
                 pl = movies.createPlaylist(approve_playlist, i)
                 pl.removeItems(i)
             pl = movies.playlist(approve_playlist)
@@ -154,7 +154,7 @@ for library in libraries:
                 labels = [username, age]
             if playlist != "":
                 if plex_functions.playlist_exists(playlist, movies) == False:
-                    i = [all_movies [1]]
+                    i = [all_movies[1]]
                     pl = movies.createPlaylist(playlist, i)
                     pl.removeItems(i)
                 pl = movies.playlist(playlist)

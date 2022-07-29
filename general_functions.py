@@ -1,4 +1,4 @@
-# pylama:ignore=E211,E225,E231,E302
+# pylama:ignore=E225,E231,E302
 
 import json
 from datetime import datetime
@@ -15,7 +15,7 @@ def get_age(date):
     return age
 
 
-def difference (list1, list2):
+def difference(list1, list2):
     list_dif = [i for i in list1 if i not in list2]
     return list_dif
 

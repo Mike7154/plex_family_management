@@ -1,4 +1,4 @@
-# pylama:ignore=E211,E225,E271,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0612
+# pylama:ignore=225,E271,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0612
 
 import requests
 import re
@@ -101,19 +101,19 @@ def scrape_CSM_page(movie_dict, page):
         for d in div:
             x = restrip(d.text,"Not present","")
             s = d["data-text"]
-            s=re.sub('<[^>]*>', '', s)
-            s=re.sub('Did you know [^?.!]*[?.!]','',s)
-            s=re.sub('Adjust limits [^?.!]*[?.!]','',s)
+            s = re.sub('<[^>]*>', '', s)
+            s = re.sub('Did you know [^?.!]*[?.!]','',s)
+            s = re.sub('Adjust limits [^?.!]*[?.!]','',s)
             s = restrip(s, "Join now")
             s = s.strip()
             text = text_add(text, x, "\n|")
             text = text_add(text,s, "|: ")
         now = datetime.now()
-        text = text_add(text,"[Date:" + now.strftime('%Y-%m-%d') +"]")
+        text = text_add(text,"[Date:" + now.strftime('%Y-%m-%d') + "]")
         movie_dict.update({'cs_summary':text})
     else:
         print("ERROR BAD STATUS CODE")
-        print (URL)
+        print(URL)
     return movie_dict
 
 def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):#Download information from Common Sense media
@@ -150,15 +150,15 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
         elif lib_type == library_types[1]:
             find_u = url_dict.get('tv_reviews')
         urls = get_search_results(URL, find_u, url_dict)
-        while rep >0: # I want to re-search using a shorter search with this
+        while rep > 0: # I want to re-search using a shorter search with this
             if len(urls) > 0:
                 psearch = page_search(urls, imdb, movies, movie_dict)
                 page = psearch[0]
                 url = psearch[1]
-                if backup_url is None and len(urls)==1 and rep ==2:
+                if backup_url is None and len(urls) == 1 and rep == 2:
                     backup_url = urls[0]
             if (len(urls) == 0 or url is None) and rep != 0:
-                print (movie.title + ' search had no verified results, trying a shorter search')
+                print(movie.title + ' search had no verified results, trying a shorter search')
                 m_title = re.sub("The ","",movie.title)
                 m_title = movie.title[0:7]
                 URL = build_url(m_title, lib_type, url_dict)
@@ -188,7 +188,7 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
 
 
 def CSM_age(summary):#Get date that Common Sense Media was updated
-    match=re.search('\[Date:[12345677890-]*\]',summary)
+    match = re.search('\[Date:[12345677890-]*\]',summary)
     d = match.group()
     date = d[6:int(len(d)-1)]
     date = datetime.strptime(date, '%Y-%m-%d')
@@ -213,8 +213,8 @@ def remove_csm(movie):
     s = movie.summary
     if check_csm(movie):
         summary = s
-        m1 = match=re.search('\[Common Sense Media\]',summary)
-        m2=re.search('\[Date:[12345677890-]*\]',summary)
+        m1 = match = re.search('\[Common Sense Media\]',summary)
+        m2 = re.search('\[Date:[12345677890-]*\]',summary)
         start = m1.start()
         if m2 is None:
             end = len(summary)
@@ -232,5 +232,5 @@ def CSM_approve_age(movie, lib_type = 'movie', url_dict = csm_URLs):#Download in
         print("good")
     else:
         print("ERROR BAD STATUS CODE")
-        print (URL)
+        print(URL)
         return None
