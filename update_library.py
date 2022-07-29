@@ -171,22 +171,24 @@ for library in libraries:
     movie_list = list(set(movies.search(label="Unlabeled")).intersection(labeled_movies))
     for movie in movie_list:
         print(movie.title)
-        movie.removeLabel('Unlabeled').reload()
+        movie.removeLabel('Unlabeled')
 
-    unlabeled_movies = difference(all_movies,labeled_movies)
-    for movie in unlabeled_movies:
-        print('Adding unlabeled to '+movie.title)
-        movie.addLabel('Unlabeled').reload
+    if use_unlabeled_label == True and CLEAN_LIBRARY == False:
+        unlabeled_movies = difference(all_movies,labeled_movies)
+        for movie in unlabeled_movies:
+            print('Adding unlabeled to '+movie.title)
+            movie.addLabel('Unlabeled')
     ############################################################
     ####################################################################################################
     #Clean Library - Remove common sense labels and Summaries
     if CLEAN_LIBRARY == True:
         for movie in all_movies:
-            print("cleaning " + movie.title)
-            s = csmedia.remove_csm(movie)
-            movie.editSummary(s, locked = False)
-            for label in plex_functions.build_age_labels(25, "both", gender_specific = True):
-                movie.removeLabel(label).reload
+            if "[Common Sense Media]" in movie.summary:
+                print("cleaning " + movie.title)
+                s = csmedia.remove_csm(movie)
+                movie.editSummary(s, locked = False)
+                for label in plex_functions.list_movie_age_labels(movie):
+                    movie.removeLabel(label).reload()
         update_log("Cleaned Libraries, it's a good idea to refresh all metadata")
 
     ####################################################################################################
