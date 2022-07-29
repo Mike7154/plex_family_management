@@ -1,4 +1,4 @@
-# pylama:ignore=E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -13,10 +13,12 @@ def plex_account():
     account = MyPlexAccount(plex_email, plex_password)
     return account
 
+
 def plex_connect(account=plex_account()):
     plex = account.resource(plex_server).connect()
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     return plex
+
 
 def session_duration(plex):  # get the duration of the longest item playing currently. It gets the full movie duration unfortunately
     sessions = plex.sessions
@@ -25,6 +27,7 @@ def session_duration(plex):  # get the duration of the longest item playing curr
         duration.append(s.duration)
     return max(duration)
 
+
 def remLabels(movie, labels):
     mlabs = [i.tag for i in movie.labels]
     rlabs = [i for i in mlabs if i in labels]
@@ -32,14 +35,17 @@ def remLabels(movie, labels):
         print(movie.title + ' removing ' + rl)
         movie.removeLabel(rl).reload()
 
+
 def remove_items_labels(items, labels):
     for i in items:
         remLabels(i, labels)
+
 
 def add_items_labels(items, labels):
     for i in items:
         for l in labels:
             i.addLabel(l).reload()
+
 
 def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):
     for i in items:
@@ -50,6 +56,7 @@ def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):
         remLabels(i, labels)
         if add_label != "":
             i.addLabel(add_label)
+
 
 def list_movie_age_labels(movie):
     m_labels = [i.tag for i in movie.labels]
@@ -71,6 +78,7 @@ def build_age_labels(age, gender="", gender_specific=False):
                 labels.append(str(a)+gender_specific_txt[1])
     return labels
 
+
 def get_user_labels(user):
     username = user['username']
     gender = user['gender']
@@ -80,10 +88,12 @@ def get_user_labels(user):
     labels.extend(build_age_labels(age, gender, gender_specific))
     return labels
 
+
 def user_exists(username, account=plex_account()):
     account_users = account.users()
     user_list = [u.title for u in account_users]
     return username in user_list
+
 
 def playlist_exists(playlist, library):
     playlists = library.playlists()
@@ -98,6 +108,7 @@ def get_labeled_movies(movies):
     for l in a_labels:
         labeled_movies = list(set(labeled_movies + movies.search(label=l)))
     return labeled_movies
+
 
 def get_unlabeled_movies(movies):
     labeled_movies = get_labeled_movies(movies)

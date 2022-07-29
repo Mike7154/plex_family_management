@@ -1,4 +1,4 @@
-# pylama:ignore=E302,E712,E741,W0401,W0612
+# pylama:ignore=E712,E741,W0401,W0612
 
 import requests
 import re
@@ -8,16 +8,20 @@ from datetime import datetime
 from settings import *
 from general_functions import *
 
+
 def cl_search_txt(soup, class_str):
     container = soup.select(class_str)
     return container[0].text
+
 
 def restrip(str, find, replace=""):
     out = str.replace(find, replace)
     return out.strip()
 
+
 def text_add(str, add, pretext="\n"):
     return str + pretext + add
+
 
 def build_url(movie_title, lib_type, dict=csm_URLs):
     base_url = dict.get('base')
@@ -33,6 +37,7 @@ def build_url(movie_title, lib_type, dict=csm_URLs):
     URL = base_url + movie_title
     return URL
 
+
 def get_age(date):
     age = datetime.now()-date
     age = age.total_seconds()
@@ -40,6 +45,7 @@ def get_age(date):
     age = age/24
     age = age/365
     return age
+
 
 # URL = "https://www.commonsensemedia.org/movie-reviews/paws-of-fury-the-legend-of-hank"
 # URL = "https://www.commonsensemedia.org/movie-reviews/spider-man-into-the-spider-verse"
@@ -80,6 +86,7 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
             urls.append(url)
     return urls
 
+
 def scrape_CSM_page(movie_dict, page):
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
@@ -115,6 +122,7 @@ def scrape_CSM_page(movie_dict, page):
         print("ERROR BAD STATUS CODE")
         print(URL)
     return movie_dict
+
 
 def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # Download information from Common Sense media
     updated = movie_dict.get('updated')
@@ -194,8 +202,10 @@ def CSM_age(summary):  # Get date that Common Sense Media was updated
     date = datetime.strptime(date, '%Y-%m-%d')
     return get_age(date)
 
+
 def check_csm(movie):
     return "[Common Sense Media]" in movie.summary
+
 
 def should_i_get_csm(movie):
     b = False
@@ -208,6 +218,7 @@ def should_i_get_csm(movie):
             if m_age/s_age < update_age_factor or s_age > 5:
                 b = True
     return b
+
 
 def remove_csm(movie):
     s = movie.summary
@@ -222,6 +233,7 @@ def remove_csm(movie):
             end = m2.end()
         s = summary[0:start]+summary[end:len(summary)]
     return s
+
 
 def CSM_approve_age(movie, lib_type='movie', url_dict=csm_URLs):  # Download information from Common Sense media
     page = CSM_get_page(movie, lib_type, dict)

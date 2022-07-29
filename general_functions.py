@@ -1,10 +1,10 @@
-# pylama:ignore=E302
-
 import json
 from datetime import datetime
 
+
 def str_to_date(str):
     return datetime.strptime(str, '%Y-%m-%d')
+
 
 def get_age(date):
     age = datetime.now()-date
@@ -19,15 +19,18 @@ def difference(list1, list2):
     list_dif = [i for i in list1 if i not in list2]
     return list_dif
 
+
 def load_dict(file):
     f = open(file)
     url_dict = json.load(f)
     f.close()
     return url_dict
 
+
 def write_dict(file, dict):
     with open(file, "w") as convert_file:
         convert_file.write(json.dumps(dict))
+
 
 def update_log(text):
     now = datetime.now()
