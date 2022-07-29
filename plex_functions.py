@@ -1,4 +1,4 @@
-# pylama:ignore=E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -18,7 +18,7 @@ def plex_connect(account=plex_account()):
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     return plex
 
-def session_duration(plex):  #get the duration of the longest item playing currently. It gets the full movie duration unfortunately
+def session_duration(plex):  # get the duration of the longest item playing currently. It gets the full movie duration unfortunately
     sessions = plex.sessions
     durration = [0]
     for s in sessions:
