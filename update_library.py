@@ -1,4 +1,4 @@
-# pylama:ignore=E712,E741,W0401
+# pylama:ignore=E741,W0401
 
 import csmedia
 import plex_functions
@@ -26,7 +26,7 @@ for u in users['users']:
     labels = plex_functions.get_user_labels(u)
     username = u['username']
     print(username)
-    if plex_functions.user_exists(username) == False:
+    if plex_functions.user_exists(username) is False:
         account.createHomeUser(username, plex, libraries)
         account = plex_functions.plex_account()
     user = account.user(username)
@@ -53,10 +53,10 @@ for library in libraries:
     movie_dict = load_dict(movie_dict_file)
     movies_to_run = all_movies
     c = 0
-    if run_common_sense_media == True and CLEAN_LIBRARY == False:
+    if run_common_sense_media is True and CLEAN_LIBRARY is False:
         for movie in movies_to_run:
             # print(movie.title)
-            if csmedia.should_i_get_csm(movie) == True:
+            if csmedia.should_i_get_csm(movie) is True:
                 if movie.guid not in movie_dict:
                     movie_dict.update({movie.guid: {'verified': False}})
                 m_dict = movie_dict.get(movie.guid)
@@ -79,7 +79,7 @@ for library in libraries:
     # If the settings.py file says to, this will add a label to each movie with a missing label. The label will match
     # the recommended age from common sense media
     c = 0
-    if approve_common_sense_media_ages == True and CLEAN_LIBRARY == False:
+    if approve_common_sense_media_ages is True and CLEAN_LIBRARY is False:
         unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
         movies_to_run = unlabeled_movies
         for movie in movies_to_run:
@@ -92,7 +92,7 @@ for library in libraries:
                 c = c + 1
             else:
                 print("skipping length 0")
-                if use_unlabeled_label == True:
+                if use_unlabeled_label is True:
                     movie.addLabel('Unlabeled').reload()
     else:
         print("Skipping common sense media labels")
@@ -103,10 +103,10 @@ for library in libraries:
 
     # Update movie sharing from Playlists
     # Movies added to the playlist will be shared with the user
-    if run_playlist_approve == True and CLEAN_LIBRARY == False and library_type == 'movies':
+    if run_playlist_approve is True and CLEAN_LIBRARY is False and library_type == 'movies':
         # Unapprove playlist
         if unapprove_playlist != "":
-            if plex_functions.playlist_exists(unapprove_playlist, movies) == False:
+            if plex_functions.playlist_exists(unapprove_playlist, movies) is False:
                 i = [all_movies[1]]
                 pl = movies.createPlaylist(unapprove_playlist, i)
                 pl.removeItems(i)
@@ -122,7 +122,7 @@ for library in libraries:
         # ------------------------------------------------------------------------
         # Approve playlist
         if approve_playlist != "":
-            if plex_functions.playlist_exists(approve_playlist, movies) == False:
+            if plex_functions.playlist_exists(approve_playlist, movies) is False:
                 i = [all_movies[1]]
                 pl = movies.createPlaylist(approve_playlist, i)
                 pl.removeItems(i)
@@ -152,7 +152,7 @@ for library in libraries:
                 age = age_label_prefix + str(age)+age_label_suffix
                 labels = [username, age]
             if playlist != "":
-                if plex_functions.playlist_exists(playlist, movies) == False:
+                if plex_functions.playlist_exists(playlist, movies) is False:
                     i = [all_movies[1]]
                     pl = movies.createPlaylist(playlist, i)
                     pl.removeItems(i)
@@ -174,7 +174,7 @@ for library in libraries:
         print(movie.title)
         movie.removeLabel('Unlabeled')
 
-    if use_unlabeled_label == True and CLEAN_LIBRARY == False:
+    if use_unlabeled_label is True and CLEAN_LIBRARY is False:
         unlabeled_movies = difference(all_movies, labeled_movies)
         for movie in unlabeled_movies:
             print('Adding unlabeled to '+movie.title)
@@ -182,7 +182,7 @@ for library in libraries:
     ############################################################
     ####################################################################################################
     # Clean Library - Remove common sense labels and Summaries
-    if CLEAN_LIBRARY == True:
+    if CLEAN_LIBRARY is True:
         for movie in all_movies:
             if "[Common Sense Media]" in movie.summary:
                 print("cleaning " + movie.title)
@@ -202,7 +202,7 @@ for library in libraries:
     else:
         last_run = str_to_date(last_run)
 
-    if run_col_labels == True and now - timedelta(days=update_collection_sync_freq) >= last_run:
+    if run_col_labels is True and now - timedelta(days=update_collection_sync_freq) >= last_run:
         collections = movies.search(libtype='collection')
         col = collections[20]
         for col in collections:
@@ -215,7 +215,7 @@ for library in libraries:
             #    if i.updatedAt + timedelta(days=2) > plex_functions.str_to_date(str(movie_dict.get('Collections'))):
             #        cont = True
             #        break
-            # if cont == False:
+            # if cont is False:
             #    continue
             for i in items:
                 i_labels.extend([l.tag for l in i.labels])

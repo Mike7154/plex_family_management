@@ -1,4 +1,4 @@
-# pylama:ignore=E712,E741,W0401,W0611,W0612
+# pylama:ignore=E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -71,7 +71,7 @@ def build_age_labels(age, gender="", gender_specific=False):
     for a in ages:
         a = age_label_prefix + str(a) + age_label_suffix
         labels.append(str(a))
-        if gender_specific == True:
+        if gender_specific is True:
             if gender == "F" or gender == "both":
                 labels.append(str(a)+gender_specific_txt[0])
             if gender == "M" or gender == "both":

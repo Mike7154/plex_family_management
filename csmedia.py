@@ -1,4 +1,4 @@
-# pylama:ignore=E712,E741,W0401,W0612
+# pylama:ignore=E741,W0401,W0612
 
 import requests
 import re
@@ -209,10 +209,10 @@ def check_csm(movie):
 
 def should_i_get_csm(movie):
     b = False
-    if check_csm(movie) == False:
+    if notcheck_csm(movie) is False:
         b = True
     else:
-        if update_old_summaries == True:
+        if update_old_summaries is True:
             m_age = get_age(movie.originallyAvailableAt)
             s_age = CSM_age(movie.summary)
             if m_age/s_age < update_age_factor or s_age > 5:
