@@ -1,4 +1,4 @@
-# pylama:ignore=E261,E262,E265,E271,E302,E712,E741,W0401,W0612
+# pylama:ignore=E262,E265,E271,E302,E712,E741,W0401,W0612
 
 import requests
 import re
@@ -62,7 +62,7 @@ def page_search(urls, search, lib, movie_dict):
             #dir(m2)
             page = None
             url = None
-            time.sleep(0.4) # I put this line in to offload Common Sense requests during large server get_search_results
+            time.sleep(0.4)  # I put this line in to offload Common Sense requests during large server get_search_results
             #- The above line should only slow down the first server run
     return [page, url]
 
@@ -116,9 +116,9 @@ def scrape_CSM_page(movie_dict, page):
         print(URL)
     return movie_dict
 
-def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):#Download information from Common Sense media
+def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  #Download information from Common Sense media
     updated = movie_dict.get('updated')
-    if updated is not None: #Skip the movie if it's been updated recent enough. Whether or not found/verified
+    if updated is not None:  #Skip the movie if it's been updated recent enough. Whether or not found/verified
         updated = datetime.strptime(updated, '%Y-%m-%d')
         oaa = movie.originallyAvailableAt
         if oaa is None:
@@ -150,7 +150,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):#Dow
         elif lib_type == library_types[1]:
             find_u = url_dict.get('tv_reviews')
         urls = get_search_results(URL, find_u, url_dict)
-        while rep > 0: # I want to re-search using a shorter search with this
+        while rep > 0:  # I want to re-search using a shorter search with this
             if len(urls) > 0:
                 psearch = page_search(urls, imdb, movies, movie_dict)
                 page = psearch[0]
@@ -171,7 +171,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):#Dow
         page = requests.get(url)
         print(movie.title + " Search only showed 1 unverified result. I'm going to use that")
         update_log(movie.title + ": Unverified IMDb match")
-    if page is None:#if no page
+    if page is None:  #if no page
         movie_dict.update({"updated": updated.strftime('%Y-%m-%d')})
         movie_dict.update({"verified": False})
         update_log(movie.title + ": Missing from Common Sense Media")
@@ -187,7 +187,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):#Dow
     return movie_dict
 
 
-def CSM_age(summary):#Get date that Common Sense Media was updated
+def CSM_age(summary):  #Get date that Common Sense Media was updated
     match = re.search('\[Date:[12345677890-]*\]', summary)
     d = match.group()
     date = d[6:int(len(d)-1)]
@@ -223,7 +223,7 @@ def remove_csm(movie):
         s = summary[0:start]+summary[end:len(summary)]
     return s
 
-def CSM_approve_age(movie, lib_type='movie', url_dict=csm_URLs):#Download information from Common Sense media
+def CSM_approve_age(movie, lib_type='movie', url_dict=csm_URLs):  #Download information from Common Sense media
     page = CSM_get_page(movie, lib_type, dict)
     print(page.status_code)
     if page is None:
