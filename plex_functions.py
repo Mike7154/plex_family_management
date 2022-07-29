@@ -1,4 +1,4 @@
-# pylama:ignore=E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -9,18 +9,18 @@ from general_functions import *
 
 #Connect to Plex
 def plex_account():
-    PLEXAPI_PLEXAPI_TIMEOUT=200
+    PLEXAPI_PLEXAPI_TIMEOUT = 200
     account = MyPlexAccount(plex_email,plex_password)
     return account
 
 def plex_connect(account = plex_account()):
     plex = account.resource(plex_server).connect()
-    PLEXAPI_PLEXAPI_TIMEOUT=200
+    PLEXAPI_PLEXAPI_TIMEOUT = 200
     return plex
 
 def session_duration(plex): #get the duration of the longest item playing currently. It gets the full movie duration unfortunately
     sessions = plex.sessions
-    durration=[0]
+    durration = [0]
     for s in sessions:
         duration.append(s.duration)
     return max(duration)
@@ -48,7 +48,7 @@ def clear_labels(items, add_label = "", ignore_label ="", remove_labels = []):
         if ignore_label in labels:
             labels.remove(ignore_label)
         remLabels(i,labels)
-        if add_label !="":
+        if add_label != "":
             i.addLabel(add_label)
 
 def list_movie_age_labels(movie):
@@ -62,12 +62,12 @@ def build_age_labels(age, gender = "", gender_specific = False):
     labels = []
     ages = range(1,age+1)
     for a in ages:
-        a = age_label_prefix +str(a) + age_label_suffix
+        a = age_label_prefix + str(a) + age_label_suffix
         labels.append(str(a))
         if gender_specific == True:
-            if gender == "F" or gender =="both":
+            if gender == "F" or gender == "both":
                 labels.append(str(a)+gender_specific_txt[0])
-            if gender =="M" or gender =="both":
+            if gender == "M" or gender == "both":
                 labels.append(str(a)+gender_specific_txt[1])
     return labels
 

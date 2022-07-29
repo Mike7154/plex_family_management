@@ -1,4 +1,4 @@
-# pylama:ignore=E225,E231,E251,E265,E303,E712,E741,W0401
+# pylama:ignore=E231,E251,E265,E303,E712,E741,W0401
 
 import csmedia
 import plex_functions
@@ -54,7 +54,7 @@ for library in libraries:
     movie_dict = load_dict(movie_dict_file)
     movies_to_run = all_movies
     c = 0
-    if run_common_sense_media==True and CLEAN_LIBRARY == False:
+    if run_common_sense_media == True and CLEAN_LIBRARY == False:
         for movie in movies_to_run:
             #print(movie.title)
             if csmedia.should_i_get_csm(movie) == True:
@@ -65,7 +65,7 @@ for library in libraries:
                 csm = m_dict.get('cs_summary')
                 if csm is not None:
                     s = csmedia.remove_csm(movie)
-                    s = s + "\n"+ csm
+                    s = s + "\n" + csm
                     movie.editSummary(s)
                     print("Edited Summary for " + movie.title)
                     c = c+1
@@ -80,7 +80,7 @@ for library in libraries:
     #If the settings.py file says to, this will add a label to each movie with a missing label. The label will match
     #the recommended age from common sense media
     c = 0
-    if approve_common_sense_media_ages==True and CLEAN_LIBRARY == False:
+    if approve_common_sense_media_ages == True and CLEAN_LIBRARY == False:
         unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
         movies_to_run = unlabeled_movies
         for movie in movies_to_run:
@@ -142,11 +142,11 @@ for library in libraries:
         for u in users['users']:
             playlist = u['playlist']
             username = u['username']
-            print("approving "+playlist+" movies for "+ username)
+            print("approving " + playlist + " movies for " + username)
 
             bday = plex_functions.str_to_date(u['dob'])
             age = round(plex_functions.get_age(bday)-0.49999)
-            if offset_playlist_approve <0:
+            if offset_playlist_approve < 0:
                 labels = [username]
             else:
                 age = age + offset_playlist_approve
@@ -226,11 +226,11 @@ for library in libraries:
             labels_to_remove = difference(c_labels,i_labels)
 
             for l in labels_to_remove:
-                print('removing '+l+' from '+ col.title)
+                print('removing ' + l + ' from ' + col.title)
                 col.removeLabel(l).reload()
 
             for l in labels_to_add:
-                print('adding  '+l+' to ' +col.title)
+                print('adding  '+l+' to ' + col.title)
                 col.addLabel(l).reload()
         movie_dict.update({"Collection":{"updated":now.strftime('%Y-%m-%d')}})
     else:

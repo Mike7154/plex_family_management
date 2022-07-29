@@ -1,4 +1,4 @@
-# pylama:ignore=E225,E231,E302
+# pylama:ignore=E231,E302
 
 import json
 from datetime import datetime
@@ -33,7 +33,7 @@ def update_log(text):
     now = datetime.now()
     file = "logs.txt"
     timestr = now.strftime('%m/%d/%Y %H:%M:%S')
-    log_text = timestr +" : "+text
+    log_text = timestr + " : " + text
     f = open(file, "a")
     f.write(log_text+'\n')
     f.close()
