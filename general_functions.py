@@ -1,4 +1,4 @@
-# pylama:ignore=E231,E302
+# pylama:ignore=E302
 
 import json
 from datetime import datetime
@@ -26,7 +26,7 @@ def load_dict(file):
     return url_dict
 
 def write_dict(file, dict):
-    with open(file,"w") as convert_file:
+    with open(file, "w") as convert_file:
         convert_file.write(json.dumps(dict))
 
 def update_log(text):

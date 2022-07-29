@@ -1,4 +1,4 @@
-# pylama:ignore=E231,E251,E265,E303,E712,E741,W0401
+# pylama:ignore=E251,E265,E303,E712,E741,W0401
 
 import csmedia
 import plex_functions
@@ -31,7 +31,7 @@ for u in users['users']:
         account.createHomeUser(username, plex, libraries)
         account = plex_functions.plex_account()
     user = account.user(username)
-    account.updateFriend(user,plex,filterMovies = {'label':labels}, filterTelevision = {'label':labels})
+    account.updateFriend(user, plex, filterMovies = {'label': labels}, filterTelevision = {'label': labels})
 
 ###############################################################
 ####################################################################################################
@@ -59,7 +59,7 @@ for library in libraries:
             #print(movie.title)
             if csmedia.should_i_get_csm(movie) == True:
                 if movie.guid not in movie_dict:
-                    movie_dict.update({movie.guid:{'verified':False}})
+                    movie_dict.update({movie.guid: {'verified': False}})
                 m_dict = movie_dict.get(movie.guid)
                 m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type)
                 csm = m_dict.get('cs_summary')
@@ -71,7 +71,7 @@ for library in libraries:
                     c = c+1
                 else:
                     print(movie.title + ": Missing from Common Sense Media")
-                movie_dict.update({movie.guid:m_dict})
+                movie_dict.update({movie.guid: m_dict})
             #else:
                 #print("Should skip. Common sense media already updated or not required")
     write_dict(movie_dict_file, movie_dict)
@@ -114,7 +114,7 @@ for library in libraries:
             pl = movies.playlist(unapprove_playlist)
             items = pl.items()
             user_labels = [u.title for u in account.users()]
-            plex_functions.clear_labels(items, unapprove_label,"", user_labels)
+            plex_functions.clear_labels(items, unapprove_label, "", user_labels)
             pl = movies.playlist(unapprove_playlist)
             items = pl.items()
             pl.removeItems(items)
@@ -130,7 +130,7 @@ for library in libraries:
             pl = movies.playlist(approve_playlist)
             items = pl.items()
             plex_functions.add_items_labels(items, [age_label_prefix + "1" + age_label_suffix])
-            plex_functions.remove_items_labels(items,[unapprove_label])
+            plex_functions.remove_items_labels(items, [unapprove_label])
             pl = movies.playlist(approve_playlist)
             items = pl.items()
             pl.removeItems(items)
@@ -160,7 +160,7 @@ for library in libraries:
                 pl = movies.playlist(playlist)
                 items = pl.items()
                 plex_functions.add_items_labels(items, labels)
-                plex_functions.remove_items_labels(items,[unapprove_label])
+                plex_functions.remove_items_labels(items, [unapprove_label])
                 pl = movies.playlist(playlist)
                 items = pl.items()
                 pl.removeItems(items)
@@ -176,7 +176,7 @@ for library in libraries:
         movie.removeLabel('Unlabeled')
 
     if use_unlabeled_label == True and CLEAN_LIBRARY == False:
-        unlabeled_movies = difference(all_movies,labeled_movies)
+        unlabeled_movies = difference(all_movies, labeled_movies)
         for movie in unlabeled_movies:
             print('Adding unlabeled to '+movie.title)
             movie.addLabel('Unlabeled')
@@ -198,7 +198,7 @@ for library in libraries:
     last_run = movie_dict.get("Collection")
     last_run = last_run.get('updated')
     if last_run is None:
-        movie_dict.update({'Collection':{"updated":"1900-01-01"}})
+        movie_dict.update({'Collection': {"updated": "1900-01-01"}})
         last_run = now - deltatime(days=10)
     else:
         last_run = str_to_date(last_run)
@@ -222,8 +222,8 @@ for library in libraries:
                 i_labels.extend([l.tag for l in i.labels])
             i_labels = list(set(i_labels))
             c_labels = [l.tag for l in labels]
-            labels_to_add = difference(i_labels,c_labels)
-            labels_to_remove = difference(c_labels,i_labels)
+            labels_to_add = difference(i_labels, c_labels)
+            labels_to_remove = difference(c_labels, i_labels)
 
             for l in labels_to_remove:
                 print('removing ' + l + ' from ' + col.title)
@@ -232,7 +232,7 @@ for library in libraries:
             for l in labels_to_add:
                 print('adding  '+l+' to ' + col.title)
                 col.addLabel(l).reload()
-        movie_dict.update({"Collection":{"updated":now.strftime('%Y-%m-%d')}})
+        movie_dict.update({"Collection": {"updated": now.strftime('%Y-%m-%d')}})
     else:
         update_log("Skipping collection label updates (check settings for freq)")
     write_dict(movie_dict_file, movie_dict)

@@ -1,4 +1,4 @@
-# pylama:ignore=E231,E265
+# pylama:ignore=E265
 
 #[LOGIN]
 #-------------------------------------------------------------------------
@@ -15,11 +15,11 @@ libraries = ["Movies", "TV Shows"]
 #This is where you add all of the users that you want to control media access
 #BE CAREFUL WITH SYNTAX HERE
 #-------------------------------------------------------------------------
-users = {"users":[
-    {"username":"kid1","gender":"M", "dob":"2015-01-19", "playlist":"kid1_add"},
-    {"username":"kid2","gender":"M", "dob":"2011-09-27", "playlist":""},
-    {"username":"kid3","gender":"M", "dob":"2011-12-25", "playlist":"kid3_add"},
-    {"username":"shared_kids","gender":"both", "dob":"2019-01-01", "playlist":"shared_account"}
+users = {"users": [
+    {"username": "kid1", "gender": "M", "dob": "2015-01-19", "playlist": "kid1_add"},
+    {"username": "kid2", "gender": "M", "dob": "2011-09-27", "playlist": ""},
+    {"username": "kid3", "gender": "M", "dob": "2011-12-25", "playlist": "kid3_add"},
+    {"username": "shared_kids", "gender": "both", "dob": "2019-01-01", "playlist": "shared_account"}
 ]}
 #-------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ age_label_suffix = "+"
 days_early = 0
 #- How many days before birthday should new age be approved?
 gender_specific = True
-gender_specific_txt = ["_girl","_boy"]
+gender_specific_txt = ["_girl", "_boy"]
 #-if true, it will approve age plus age_gender for each user. This just gives more control. (ie. only girls get the princess movies and boys get batman, if you so choose)
 #-but you would have to modify these labels manually to be "5_girl" etc
 #You can set an account to M F or both (for shared accounts that you want both content on)
@@ -98,7 +98,7 @@ csm_URLs = {
     'base': 'https://www.commonsensemedia.org',
     'movie': "https://www.commonsensemedia.org/search/category/movie/",
     'tv': 'https://www.commonsensemedia.org/search/category/tv/',
-    'movie_reviews':'/movie-reviews/',
+    'movie_reviews': '/movie-reviews/',
     'tv_reviews': '/tv-reviews/'}
-library_types = ['movie','show']
+library_types = ['movie', 'show']
 movie_dict_file = "movie_data.json"

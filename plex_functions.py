@@ -1,4 +1,4 @@
-# pylama:ignore=E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -10,7 +10,7 @@ from general_functions import *
 #Connect to Plex
 def plex_account():
     PLEXAPI_PLEXAPI_TIMEOUT = 200
-    account = MyPlexAccount(plex_email,plex_password)
+    account = MyPlexAccount(plex_email, plex_password)
     return account
 
 def plex_connect(account = plex_account()):
@@ -47,7 +47,7 @@ def clear_labels(items, add_label = "", ignore_label ="", remove_labels = []):
         labels.extend(remove_labels)
         if ignore_label in labels:
             labels.remove(ignore_label)
-        remLabels(i,labels)
+        remLabels(i, labels)
         if add_label != "":
             i.addLabel(add_label)
 
@@ -60,7 +60,7 @@ def list_movie_age_labels(movie):
 
 def build_age_labels(age, gender = "", gender_specific = False):
     labels = []
-    ages = range(1,age+1)
+    ages = range(1, age+1)
     for a in ages:
         a = age_label_prefix + str(a) + age_label_suffix
         labels.append(str(a))
@@ -101,7 +101,7 @@ def get_labeled_movies(movies):
 
 def get_unlabeled_movies(movies):
     labeled_movies = get_labeled_movies(movies)
-    movies = difference(movies.all(),labeled_movies)
+    movies = difference(movies.all(), labeled_movies)
     return movies
 
 

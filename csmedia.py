@@ -1,4 +1,4 @@
-# pylama:ignore=E271,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0612
+# pylama:ignore=E251,E261,E262,E265,E271,E302,E712,E741,W0401,W0612
 
 import requests
 import re
@@ -12,8 +12,8 @@ def cl_search_txt(soup, class_str):
     container = soup.select(class_str)
     return container[0].text
 
-def restrip(str,find,replace = ""):
-    out = str.replace(find,replace)
+def restrip(str, find, replace = ""):
+    out = str.replace(find, replace)
     return out.strip()
 
 def text_add(str, add, pretext = "\n"):
@@ -29,7 +29,7 @@ def build_url(movie_title, lib_type, dict = csm_URLs):
         return ""
     print(movie_title)
     movie_title = re.sub("[^a-zA-Z0-9 ']", '', movie_title)
-    movie_title = re.sub(' ','%20',movie_title)
+    movie_title = re.sub(' ', '%20', movie_title)
     URL = base_url + movie_title
     return URL
 
@@ -48,7 +48,7 @@ def page_search(urls, search, lib, movie_dict):
         url = u
         #print(u)
         page = requests.get(u)
-        search_m = re.search(str(search),page.text)
+        search_m = re.search(str(search), page.text)
         if search_m is not None:
             print(u)
             break
@@ -64,7 +64,7 @@ def page_search(urls, search, lib, movie_dict):
             url = None
             time.sleep(0.4) # I put this line in to offload Common Sense requests during large server get_search_results
             #- The above line should only slow down the first server run
-    return [page,url]
+    return [page, url]
 
 
 def get_search_results(URL, url_match, url_dict, skip_urls = []):
@@ -83,34 +83,34 @@ def get_search_results(URL, url_match, url_dict, skip_urls = []):
 def scrape_CSM_page(movie_dict, page):
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
-        to_know = cl_search_txt(soup,"div[class^=review-view-parents-need-know]")
-        to_know = restrip(to_know,"Show more")
-        to_know = restrip(to_know, "\n\n","\n")
-        to_know = restrip(to_know, "\n\n","\n")
+        to_know = cl_search_txt(soup, "div[class^=review-view-parents-need-know]")
+        to_know = restrip(to_know, "Show more")
+        to_know = restrip(to_know, "\n\n", "\n")
+        to_know = restrip(to_know, "\n\n", "\n")
         #print(to_know)
-        age = cl_search_txt(soup,"span[class^=rating__age]")
+        age = cl_search_txt(soup, "span[class^=rating__age]")
         age = age.strip()
         non_decimal = re.compile(r'[^\d.]+')
         cs_age = non_decimal.sub('', age)
-        movie_dict.update({"cs_age":int(cs_age)})
+        movie_dict.update({"cs_age": int(cs_age)})
         div = soup.select("div[class^=content-grid-item]")
         text = "[Common Sense Media]"
         text = text_add(text, age, " ")
         text = text_add(text, to_know, "\n")
         #print(text)
         for d in div:
-            x = restrip(d.text,"Not present","")
+            x = restrip(d.text, "Not present", "")
             s = d["data-text"]
             s = re.sub('<[^>]*>', '', s)
-            s = re.sub('Did you know [^?.!]*[?.!]','',s)
-            s = re.sub('Adjust limits [^?.!]*[?.!]','',s)
+            s = re.sub('Did you know [^?.!]*[?.!]', '', s)
+            s = re.sub('Adjust limits [^?.!]*[?.!]', '', s)
             s = restrip(s, "Join now")
             s = s.strip()
             text = text_add(text, x, "\n|")
-            text = text_add(text,s, "|: ")
+            text = text_add(text, s, "|: ")
         now = datetime.now()
-        text = text_add(text,"[Date:" + now.strftime('%Y-%m-%d') + "]")
-        movie_dict.update({'cs_summary':text})
+        text = text_add(text, "[Date:" + now.strftime('%Y-%m-%d') + "]")
+        movie_dict.update({'cs_summary': text})
     else:
         print("ERROR BAD STATUS CODE")
         print(URL)
@@ -133,7 +133,7 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
         update_log(movie.title + " Doesn't have an IMDbId in Plex")
         imdb = 'NOMATCH'
     else:
-        imdb = re.sub('imdb://','',imdb[0])
+        imdb = re.sub('imdb://', '', imdb[0])
     #Check if the URL was verified against IMDB
     if movie_dict.get('verified') is True:
         url = movie_dict.get('url')
@@ -159,7 +159,7 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
                     backup_url = urls[0]
             if (len(urls) == 0 or url is None) and rep != 0:
                 print(movie.title + ' search had no verified results, trying a shorter search')
-                m_title = re.sub("The ","",movie.title)
+                m_title = re.sub("The ", "", movie.title)
                 m_title = movie.title[0:7]
                 URL = build_url(m_title, lib_type, url_dict)
                 urls = get_search_results(URL, find_u, url_dict, urls)
@@ -172,23 +172,23 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
         print(movie.title + " Search only showed 1 unverified result. I'm going to use that")
         update_log(movie.title + ": Unverified IMDb match")
     if page is None:#if no page
-        movie_dict.update({"updated":updated.strftime('%Y-%m-%d')})
-        movie_dict.update({"verified":False})
+        movie_dict.update({"updated": updated.strftime('%Y-%m-%d')})
+        movie_dict.update({"verified": False})
         update_log(movie.title + ": Missing from Common Sense Media")
         return movie_dict
     #print(url)
-    movie_dict.update({"url":url})
-    search_m = re.search(str(imdb),page.text)
+    movie_dict.update({"url": url})
+    search_m = re.search(str(imdb), page.text)
     if search_m is not None:
-        movie_dict.update({"verified":True})
+        movie_dict.update({"verified": True})
     else:
-        movie_dict.update({"verified":False})
+        movie_dict.update({"verified": False})
     movie_dict = scrape_CSM_page(movie_dict, page)
     return movie_dict
 
 
 def CSM_age(summary):#Get date that Common Sense Media was updated
-    match = re.search('\[Date:[12345677890-]*\]',summary)
+    match = re.search('\[Date:[12345677890-]*\]', summary)
     d = match.group()
     date = d[6:int(len(d)-1)]
     date = datetime.strptime(date, '%Y-%m-%d')
@@ -213,8 +213,8 @@ def remove_csm(movie):
     s = movie.summary
     if check_csm(movie):
         summary = s
-        m1 = match = re.search('\[Common Sense Media\]',summary)
-        m2 = re.search('\[Date:[12345677890-]*\]',summary)
+        m1 = match = re.search('\[Common Sense Media\]', summary)
+        m2 = re.search('\[Date:[12345677890-]*\]', summary)
         start = m1.start()
         if m2 is None:
             end = len(summary)
