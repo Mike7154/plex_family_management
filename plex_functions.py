@@ -1,8 +1,8 @@
-# pylama:ignore=W0401,W0611,W0612
+# pylama:ignore=W0401,W0612
 
 from plexapi.myplex import MyPlexAccount
-import time
-import json
+# import time
+# import json
 from settings import *
 from general_functions import *
 
@@ -105,8 +105,8 @@ def get_labeled_movies(movies):
     a_labels = [unapprove_label]
     a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
     labeled_movies = []
-    for l in a_labels:
-        labeled_movies = list(set(labeled_movies + movies.search(label=l)))
+    for label in a_labels:
+        labeled_movies = list(set(labeled_movies + movies.search(label=label)))
     return labeled_movies
 
 
