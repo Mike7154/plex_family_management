@@ -1,4 +1,4 @@
-# pylama:ignore=E117,E202,E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
+# pylama:ignore=E202,E225,E231,E251,E261,E262,E265,E302,E712,E741,W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -72,13 +72,13 @@ def build_age_labels(age, gender = "", gender_specific = False):
     return labels
 
 def get_user_labels(user):
-        username = user['username']
-        gender = user['gender']
-        bday = str_to_date(user['dob'])
-        age = round(get_age(bday)-0.49999+(days_early)/365)
-        labels = [username]
-        labels.extend(build_age_labels(age, gender, gender_specific))
-        return labels
+    username = user['username']
+    gender = user['gender']
+    bday = str_to_date(user['dob'])
+    age = round(get_age(bday)-0.49999+(days_early)/365)
+    labels = [username]
+    labels.extend(build_age_labels(age, gender, gender_specific))
+    return labels
 
 def user_exists(username, account = plex_account()):
     account_users = account.users()
