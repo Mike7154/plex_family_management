@@ -1,4 +1,4 @@
-# pylama:ignore=E741,W0401,W0611,W0612
+# pylama:ignore=W0401,W0611,W0612
 
 from plexapi.myplex import MyPlexAccount
 import time
@@ -43,8 +43,8 @@ def remove_items_labels(items, labels):
 
 def add_items_labels(items, labels):
     for i in items:
-        for l in labels:
-            i.addLabel(l).reload()
+        for label in labels:
+            i.addLabel(label).reload()
 
 
 def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):

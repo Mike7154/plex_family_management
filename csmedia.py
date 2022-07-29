@@ -1,4 +1,4 @@
-# pylama:ignore=E741,W0401,W0612
+# pylama:ignore=W0401,W0612
 
 import requests
 import re
@@ -78,9 +78,9 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
     soup = BeautifulSoup(search_page.content, 'html.parser')
     links = soup.find_all('a', href=re.compile('^' + url_match))
     urls = []
-    for l in links:
+    for link in links:
         b = url_dict.get('base')
-        l = l.get('href')
+        link = link.get('href')
         url = b+l
         if url not in urls and url not in skip_urls:
             urls.append(url)

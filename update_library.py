@@ -1,4 +1,4 @@
-# pylama:ignore=E741,W0401
+# pylama:ignore=W0401
 
 import csmedia
 import plex_functions
@@ -218,18 +218,18 @@ for library in libraries:
             # if cont is False:
             #    continue
             for i in items:
-                i_labels.extend([l.tag for l in i.labels])
+                i_labels.extend([label.tag for label in i.labels])
             i_labels = list(set(i_labels))
-            c_labels = [l.tag for l in labels]
+            c_labels = [label.tag for label in labels]
             labels_to_add = difference(i_labels, c_labels)
             labels_to_remove = difference(c_labels, i_labels)
 
-            for l in labels_to_remove:
-                print('removing ' + l + ' from ' + col.title)
+            for label in labels_to_remove:
+                print('removing ' + label + ' from ' + col.title)
                 col.removeLabel(l).reload()
 
-            for l in labels_to_add:
-                print('adding  '+l+' to ' + col.title)
+            for label in labels_to_add:
+                print('adding  ' + label + ' to ' + col.title)
                 col.addLabel(l).reload()
         movie_dict.update({"Collection": {"updated": now.strftime('%Y-%m-%d')}})
     else:
