@@ -41,7 +41,8 @@ def get_age(date):
 
 #URL = "https://www.commonsensemedia.org/movie-reviews/paws-of-fury-the-legend-of-hank"
 #URL = "https://www.commonsensemedia.org/movie-reviews/spider-man-into-the-spider-verse"
-def page_search(urls, search, lib, movie_dict):
+def page_search(urls, search, lib, movie_dict, backup_search = ""):
+    backup_url = None
     for u in urls:
         url = u
         #print(u)
@@ -51,17 +52,16 @@ def page_search(urls, search, lib, movie_dict):
             print(u)
             break
         else:
-            #page = requests.get('https://www.commonsensemedia.org/movie-reviews/moms-night-out')
-            #m2=re.search('imdb.com/title/tt[1234567890]*',page.text)
-            #non_decimal = re.compile(r'[^\d]+')
-            #imdb = non_decimal.sub('',m2.group(0))
-            #imdb = 'imdb://tt' + imdb
-            #lib.getGuid("imdb")
-            #dir(m2)
-            page = None
+            if backup_search != "":
+                search_t = re.search(str(backup_search), page.text)
+            if search_t is not None:
+                backup_url = url
             url = None
             time.sleep(0.4) # I put this line in to offload Common Sense requests during large server get_search_results
             #- The above line should only slow down the first server run
+    if Page is None and url is None and backup_url is not None:
+        url = backup_url
+        page = requests.get(backup_url)
     return [page,url]
 
 
@@ -150,7 +150,7 @@ def CSM_get(movie, movie_dict, movies, lib_type = 'movie', url_dict = csm_URLs):
         urls = get_search_results(URL, find_u, url_dict)
         while rep >0: # I want to re-search using a shorter search with this
             if len(urls) > 0:
-                psearch = page_search(urls, imdb, movies, movie_dict)
+                psearch = page_search(urls, imdb, movies, movie_dict, '"'+movie.title +'"')
                 page = psearch[0]
                 url = psearch[1]
                 if backup_url is None and len(urls)==1 and rep ==2:
