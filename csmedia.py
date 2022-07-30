@@ -48,9 +48,10 @@ def get_age(date):
 
 
 
-def page_search(urls, search, lib, movie_dict):
+def page_search(urls, search, lib, movie_dict, backup_search = ""):
     for u in urls:
         url = u
+        backup_url = None
         # print(u)
         page = requests.get(u)
         search_m = re.search(str(search), page.text)
@@ -60,12 +61,14 @@ def page_search(urls, search, lib, movie_dict):
         else:
             if backup_search != "":
                 search_t = re.search(str(backup_search), page.text)
-            if search_t is not None:
-                backup_url = url
+                if search_t is not None:
+                    backup_url = url
+                    search_t = None
             url = None
+            page = None
             time.sleep(0.4) # I put this line in to offload Common Sense requests during large server get_search_results
             #- The above line should only slow down the first server run
-    if Page is None and url is None and backup_url is not None:
+    if url is None and backup_url is not None:
         url = backup_url
         page = requests.get(backup_url)
     return [page,url]
@@ -158,7 +161,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         urls = get_search_results(URL, find_u, url_dict)
         while rep > 0:  # I want to re-search using a shorter search with this
             if len(urls) > 0:
-                psearch = page_search(urls, imdb, movies, movie_dict, '"'+movie.title +'"')
+                psearch = page_search(urls, imdb, movies, movie_dict, '\"'+movie.title +'\"')
                 page = psearch[0]
                 url = psearch[1]
                 if backup_url is None and len(urls) == 1 and rep == 2:
@@ -189,6 +192,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         movie_dict.update({"verified": True})
     else:
         movie_dict.update({"verified": False})
+        print(movie.title + " was pulled in but the match could not be verified")
     movie_dict = scrape_CSM_page(movie_dict, page)
     return movie_dict
 
