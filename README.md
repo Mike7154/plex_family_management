@@ -1,5 +1,5 @@
-# Plex Family Management V 1.0.2
-Hello. I wrote this script to manage my kids media through plex more easily and it's working well for me.  The goal was to have more control over what media kids are exposed to through plex. This means having a plex server with managed users. This works for movies and TV shows, but I'm still tweaking it for TV
+# Plex Family Management V 1.0.3
+Hello. I wrote this script to manage my kids media through plex more easily and it's working well for me.  The goal was to have more control over what media kids are exposed to through plex. This means having a plex server with managed users. This works for movies and TV shows, but TV shows is less complete.
 
 
 PLEX FAMILY MANAGEMENT
