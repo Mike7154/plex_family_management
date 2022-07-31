@@ -8,7 +8,11 @@ from datetime import datetime
 from datetime import timedelta
 now = datetime.now()
 plex = plex_functions.plex_connect()
+
 print(plex)
+
+
+
 
 
 ##################################################
@@ -82,21 +86,28 @@ for library in libraries:
     if approve_common_sense_media_ages is True and CLEAN_LIBRARY is False:
         unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
         movies_to_run = unlabeled_movies
+        print("there are " + str(len(movies_to_run)) + " Unlabeled moves that I will search for common sense media ages")
         for movie in movies_to_run:
             m_dict = movie_dict.get(movie.guid)
+            if m_dict is None:
+                movie_dict.update({movie.guid: {'verified': False}})
+                m_dict = movie_dict.get(movie.guid)
+                m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type)
+                movie_dict.update({movie.guid: m_dict})
             age = m_dict.get('cs_age')
             if age is not None:
                 age = str(age)
                 movie.addLabel(age_label_prefix + age + age_label_suffix).reload()
-                print("added label "+age)
+                print("added label " + age + " for " + movie.title)
                 c = c + 1
             else:
-                print("skipping length 0")
+                print("skipping length 0 "+ movie.title)
                 if use_unlabeled_label is True:
                     movie.addLabel('Unlabeled').reload()
+        update_log("Updated age labels for " + str(c) + " movies")
+        write_dict(movie_dict_file, movie_dict)
     else:
         print("Skipping common sense media labels")
-    update_log("Updated age labels for " + str(c) + " movies")
     # END COMMON SENSE MEDIA SECTION
     ###############################################################
     ####################################################################################################
@@ -172,7 +183,7 @@ for library in libraries:
     movie_list = list(set(movies.search(label="Unlabeled")).intersection(labeled_movies))
     for movie in movie_list:
         print(movie.title)
-        movie.removeLabel('Unlabeled')
+        movie.removeLabel('Unlabeled').reload()
 
     if use_unlabeled_label is True and CLEAN_LIBRARY is False:
         unlabeled_movies = difference(all_movies, labeled_movies)
@@ -195,11 +206,11 @@ for library in libraries:
     ####################################################################################################
     # Add and remove collection labels
     last_run = movie_dict.get("Collection")
-    last_run = last_run.get('updated')
     if last_run is None:
         movie_dict.update({'Collection': {"updated": "1900-01-01"}})
-        last_run = now - deltatime(days=10)
+        last_run = now - timedelta(days=10)
     else:
+        last_run = last_run.get('updated')
         last_run = str_to_date(last_run)
 
     if run_col_labels is True and now - timedelta(days=update_collection_sync_freq) >= last_run:
@@ -226,11 +237,11 @@ for library in libraries:
 
             for label in labels_to_remove:
                 print('removing ' + label + ' from ' + col.title)
-                col.removeLabel(l).reload()
+                col.removeLabel(label).reload()
 
             for label in labels_to_add:
                 print('adding  ' + label + ' to ' + col.title)
-                col.addLabel(l).reload()
+                col.addLabel(label).reload()
         movie_dict.update({"Collection": {"updated": now.strftime('%Y-%m-%d')}})
     else:
         update_log("Skipping collection label updates (check settings for freq)")

@@ -179,7 +179,6 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         url = backup_url
         page = requests.get(url)
         print(movie.title + " Search only showed 1 unverified result. I'm going to use that")
-        update_log(movie.title + ": Unverified IMDb match")
     if page is None:  # if no page
         movie_dict.update({"updated": updated.strftime('%Y-%m-%d')})
         movie_dict.update({"verified": False})
@@ -192,6 +191,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         movie_dict.update({"verified": True})
     else:
         movie_dict.update({"verified": False})
+        update_log(movie.title + ": Unverified IMDb match")
         print(movie.title + " was pulled in but the match could not be verified")
     movie_dict = scrape_CSM_page(movie_dict, page)
     return movie_dict
