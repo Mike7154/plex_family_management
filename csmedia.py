@@ -120,6 +120,7 @@ def scrape_CSM_page(movie_dict, page):
             text = text_add(text, x, "\n|")
             text = text_add(text, s, "|: ")
         now = datetime.now()
+        text = restrip(text, "\n\n", "\n")
         text = text_add(text, "[Date:" + now.strftime('%Y-%m-%d') + "]")
         movie_dict.update({'cs_summary': text})
     else:
@@ -237,6 +238,7 @@ def remove_csm(movie):
         else:
             end = m2.end()
         s = summary[0:start]+summary[end:len(summary)]
+        s = strip(s)
     return s
 
 

@@ -70,6 +70,7 @@ for library in libraries:
                 if csm is not None:
                     s = csmedia.remove_csm(movie)
                     s = s + "\n" + csm
+                    s = csmedia.restrip(s, "\n\n", "\n")
                     movie.editSummary(s)
                     print("Edited Summary for " + movie.title)
                     c = c+1
@@ -99,6 +100,8 @@ for library in libraries:
             if age is not None:
                 age = str(age)
                 movie.addLabel(age_label_prefix + age + age_label_suffix).reload()
+                if extra_label != "":
+                    movie.addLabel(extra_label)
                 print("added label " + age + " for " + movie.title)
                 c = c + 1
             else:
