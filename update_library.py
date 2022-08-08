@@ -37,6 +37,7 @@ for u in users['users']:
     account.updateFriend(user, plex, filterMovies={'label': labels}, filterTelevision={'label': labels})
 
 ###############################################################
+#library = libraries[0]
 ####################################################################################################
 for library in libraries:
     update_log("Starting Library "+library)
@@ -205,48 +206,63 @@ for library in libraries:
 
     ####################################################################################################
     # Add and remove collection labels
-    last_run = movie_dict.get("Collection")
-    if last_run is None:
-        movie_dict.update({'Collection': {"updated": "1900-01-01"}})
-        last_run = now - timedelta(days=10)
-    else:
-        last_run = last_run.get('updated')
-        last_run = str_to_date(last_run)
 
-    if run_col_labels is True and now - timedelta(days=update_collection_sync_freq) >= last_run:
+    if run_col_labels is True:
         collections = movies.search(libtype='collection')
         col = collections[20]
+        c = 0
+        dir(col)
+        user_labels = [u.title for u in account.users()]
         for col in collections:
             # cont = False
             print(col.title)
-            labels = col.labels
+            if col.titleSort.startswith(ignore_prefix):
+                print("--skipping due to collection prefix rule")
+                next
+            last_run = movie_dict.get(col.guid)
+            if last_run is None:
+                last_run = last_run = now - timedelta(days = 99999)
+            else:
+                last_run = last_run.get('updated')
+                last_run = str_to_date(last_run)
             items = col.items()
-            i_labels = []
-            # for i in items:
-            #    if i.updatedAt + timedelta(days=2) > plex_functions.str_to_date(str(movie_dict.get('Collections'))):
-            #        cont = True
-            #        break
-            # if cont is False:
-            #    continue
-            for i in items:
-                i_labels.extend([label.tag for label in i.labels])
-            i_labels = list(set(i_labels))
-            c_labels = [label.tag for label in labels]
-            labels_to_add = difference(i_labels, c_labels)
-            labels_to_remove = difference(c_labels, i_labels)
+            len(col.items())
+            sync_freq = update_collection_sync_freq + round(len(col.items())/5)
+            if now - timedelta(days=sync_freq) >= last_run:
+                labels = col.labels
+                items = col.items()
+                i_labels = []
+                # for i in items:
+                #    if i.updatedAt + timedelta(days=2) > plex_functions.str_to_date(str(movie_dict.get('Collections'))):
+                #        cont = True
+                #        break
+                # if cont is False:
+                #    continue
+                for i in items:
+                    i_labels.extend(plex_functions.list_movie_age_labels(i, user_labels))
+                i_labels = list(set(i_labels))
+                c_labels = plex_functions.list_movie_age_labels(col, user_labels)
+                labels_to_add = difference(i_labels, c_labels)
+                labels_to_add.sort()
+                labels_to_remove = difference(c_labels, i_labels)
 
-            for label in labels_to_remove:
-                print('removing ' + label + ' from ' + col.title)
-                col.removeLabel(label).reload()
+                for label in labels_to_remove:
+                    print('removing ' + label + ' from ' + col.title)
+                    col.removeLabel(label).reload()
 
-            for label in labels_to_add:
-                print('adding  ' + label + ' to ' + col.title)
-                col.addLabel(label).reload()
-        movie_dict.update({"Collection": {"updated": now.strftime('%Y-%m-%d')}})
+                for label in labels_to_add:
+                    print('adding  ' + label + ' to ' + col.title)
+                    col.addLabel(label).reload()
+                movie_dict.update({col.guid: {"updated": now.strftime('%Y-%m-%d')}})
+                c = c + 1
+                if c % 1 == 0:
+                    write_dict(movie_dict_file, movie_dict)
+                    print("saved dictionary")
+            else:
+                print("skipping collection due to update setting")
+
     else:
-        update_log("Skipping collection label updates (check settings for freq)")
-    write_dict(movie_dict_file, movie_dict)
-    # save URL dictionary of movies that I coulnd't find on CSM
+        update_log("Skipping collection label updates")
 write_dict(movie_dict_file, movie_dict)
 
 

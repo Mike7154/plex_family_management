@@ -9,9 +9,9 @@ from settings import *
 from general_functions import *
 
 
-def cl_search_txt(soup, class_str):
+def cl_search_txt(soup, class_str, index = 0):
     container = soup.select(class_str)
-    return container[0].text
+    return container[index].text
 
 
 def restrip(str, find, replace=""):
@@ -87,7 +87,7 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
             urls.append(url)
     return urls
 
-
+#url = "https://www.commonsensemedia.org/movie-reviews/dc-league-of-super-pets"
 def scrape_CSM_page(movie_dict, page):
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
@@ -96,7 +96,10 @@ def scrape_CSM_page(movie_dict, page):
         to_know = restrip(to_know, "\n\n", "\n")
         to_know = restrip(to_know, "\n\n", "\n")
         # print(to_know)
-        age = cl_search_txt(soup, "span[class^=rating__age]")
+        if parents_review == True:
+            age = cl_search_txt(soup, "span[class^=rating__age]",1)
+        else:
+            age = cl_search_txt(soup, "span[class^=rating__age]")
         age = age.strip()
         non_decimal = re.compile(r'[^\d.]+')
         cs_age = non_decimal.sub('', age)

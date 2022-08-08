@@ -71,15 +71,19 @@ gender_specific_txt = ["_girl", "_boy"]
 # You can set an account to M F or both (for shared accounts that you want both content on)
 
 offset_playlist_approve = 0
-# -Just something I use personally. I like to give each kid their own movies, and they get excited about it.
+# -Just something I use personally.
 # -With this I can add a movie to a kids playlist, and it adds it to his account and his age + offset
 # Set -1 if you want to add name tag with no age tag added
 
 update_collection_sync_freq = 7
+ignore_prefix = "~"
 # - Updating the collection labels takes a while, so I choose not to update it every day
+#ignore collections with prefix
 # -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
 # [CSM]
+parents_review = True
+#When true this will use the paren'ts recommended ages. When false it will use the one from Common Sense. (Parents usually recommend 0 to 2 yeras older)
 update_old_summaries = True
 # - Should I update old common sense media summaries?
 update_age_factor = 2
