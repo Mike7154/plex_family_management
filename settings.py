@@ -84,7 +84,7 @@ ignore_prefix = "~"
 # [CSM]
 parents_review = False
 #When true this will use the paren'ts recommended ages. When false it will use the one from Common Sense. (Parents usually recommend 0 to 2 yeras older)
-extra_label = "review"
+extra_label = ""
 #Any movie that get's an age tag from Common sense will also get this tag as well
 
 update_old_summaries = True
