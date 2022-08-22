@@ -120,6 +120,8 @@ def scrape_CSM_page(movie_dict, page):
             text = text_add(text, x, "\n|")
             text = text_add(text, s, "|: ")
         now = datetime.now()
+        text = restrip(text, "\n\n\n", "\n")
+        text = restrip(text, "\n\n", "\n")
         text = restrip(text, "\n\n", "\n")
         text = text_add(text, "[Date:" + now.strftime('%Y-%m-%d') + "]")
         movie_dict.update({'cs_summary': text})

@@ -118,7 +118,7 @@ for library in libraries:
 
     # Update movie sharing from Playlists
     # Movies added to the playlist will be shared with the user
-    if run_playlist_approve is True and CLEAN_LIBRARY is False and library_type == 'movies':
+    if run_playlist_approve is True and CLEAN_LIBRARY is False and library_type == 'movie':
         # Unapprove playlist
         if unapprove_playlist != "":
             if plex_functions.playlist_exists(unapprove_playlist, movies) is False:
