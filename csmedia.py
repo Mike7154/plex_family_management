@@ -240,7 +240,7 @@ def remove_csm(movie):
         else:
             end = m2.end()
         s = summary[0:start]+summary[end:len(summary)]
-        s = strip(s)
+        s = s.strip()
     return s
 
 
