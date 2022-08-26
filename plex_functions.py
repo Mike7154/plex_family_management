@@ -58,9 +58,10 @@ def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):
             i.addLabel(add_label)
 
 
-def list_movie_age_labels(movie):
+def list_movie_age_labels(movie, accounts = []):
     m_labels = [i.tag for i in movie.labels]
     a_labels = [unapprove_label]
+    a_labels.extend(accounts)
     a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
     return list(set(m_labels).intersection(a_labels))
 
