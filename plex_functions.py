@@ -3,18 +3,17 @@
 from plexapi.myplex import MyPlexAccount
 # import time
 # import json
-from settings import *
 from general_functions import *
 
 
 # Connect to Plex
-def plex_account():
+def plex_account(plex_email, plex_password):
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     account = MyPlexAccount(plex_email, plex_password)
     return account
 
 
-def plex_connect(account=plex_account()):
+def plex_connect(plex_server, account):
     plex = account.resource(plex_server).connect()
     PLEXAPI_PLEXAPI_TIMEOUT = 200
     return plex
@@ -47,26 +46,20 @@ def add_items_labels(items, labels):
             i.addLabel(label).reload()
 
 
-def clear_labels(items, add_label="", ignore_label="", remove_labels=[]):
+def clear_labels(items, remove_labels, add_label=""):
     for i in items:
-        labels = list_movie_age_labels(i)
-        labels.extend(remove_labels)
-        if ignore_label in labels:
-            labels.remove(ignore_label)
+        labels = list_movie_age_labels(i, remove_labels)
         remLabels(i, labels)
         if add_label != "":
             i.addLabel(add_label)
 
 
-def list_movie_age_labels(movie, accounts = []):
+def list_movie_age_labels(movie, age_labels):
     m_labels = [i.tag for i in movie.labels]
-    a_labels = [unapprove_label]
-    a_labels.extend(accounts)
-    a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
-    return list(set(m_labels).intersection(a_labels))
+    return list(set(m_labels).intersection(age_labels))
 
 
-def build_age_labels(age, gender="", gender_specific=False):
+def build_age_labels(age, gender="", gender_specific=False, age_label_prefix = "", age_label_suffix = "", gender_specific_txt = ["",""]):
     labels = []
     ages = range(1, age+1)
     for a in ages:
@@ -80,17 +73,26 @@ def build_age_labels(age, gender="", gender_specific=False):
     return labels
 
 
-def get_user_labels(user):
-    username = user['username']
-    gender = user['gender']
-    bday = str_to_date(user['dob'])
-    age = round(get_age(bday)-0.49999+(days_early)/365)
-    labels = [username]
-    labels.extend(build_age_labels(age, gender, gender_specific))
+def get_user_labels(user, days_early = 0, gender_specific = False, age_label_prefix = "", age_label_suffix = "", gender_specific_txt = ["",""]):
+    if user.dob is None:
+        if user.age is None:
+            text = user.username + " does not have a DOB or age listed. Please enter it in settings if you want to approve age-apropriate content"
+            print(text)
+            update_log(text)
+            return [user.username]
+        else:
+            age = user.age
+    else:
+        age = round(get_age(user.dob)-0.5+(days_early)/365)
+    gender = user.gender
+    if gender is None:
+        gender_specific = False
+    labels = [user.username]
+    labels.extend(build_age_labels(age, gender, gender_specific, age_label_prefix, age_label_suffix, gender_specific_txt))
     return labels
 
 
-def user_exists(username, account=plex_account()):
+def user_exists(username, account):
     account_users = account.users()
     user_list = [u.title for u in account_users]
     return username in user_list
@@ -102,18 +104,17 @@ def playlist_exists(playlist, library):
     return playlist in pl_list
 
 
-def get_labeled_movies(movies):
-    a_labels = [unapprove_label]
-    a_labels.extend(build_age_labels(25, gender="both", gender_specific=True))
+def get_labeled_movies(library, labels):
+    a_labels = labels
     labeled_movies = []
     for label in a_labels:
-        labeled_movies = list(set(labeled_movies + movies.search(label=label)))
+        labeled_movies = list(set(labeled_movies + library.search(label=label)))
     return labeled_movies
 
 
-def get_unlabeled_movies(movies):
-    labeled_movies = get_labeled_movies(movies)
-    movies = difference(movies.all(), labeled_movies)
+def get_unlabeled_movies(library, labels):
+    labeled_movies = get_labeled_movies(library, labels)
+    movies = difference(library.all(), labeled_movies)
     return movies
 
 
