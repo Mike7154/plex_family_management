@@ -55,7 +55,7 @@ if data['Login']['plex_server'] is None:
 
 now = datetime.now().date()
 plex = plex_functions.plex_connect(data['Login']['plex_server'], account)
-
+PLEXAPI_PLEXAPI_TIMEOUT=3800
 
 
 if data['Login']['libraries'] is None:
@@ -70,28 +70,46 @@ print(plex)
 libraries = []
 libraries.extend(data['Login']['libraries'])
 
+def input_user_data(u):
+    user = {}
+    if input("Do you want to manage the user '"+ u.title +"'? (y/n): ") == 'y':
+        user['username'] = u.title
+        user['gender'] = input("What is the gender of '"+ u.title +"'? (M/F/both): ")
+        birthday = input("What is the birthdate of '"+ u.title +"'? ENTER to skip (YYYY-MM-DD): ")
+        if birthday == '':
+            age = input("Do you want an age appropriate cutoff for the account '"+ u.title +"'? (ie. 13): ")
+            if age != '':
+                user['age'] = int(age)
+        else:
+            user['dob'] = str_to_date(birthday)
+        playlist = input("What is the name of the playlist to approve movies for the account '"+ u.title +"'? ENTER to skip: ")
+        if playlist != '':
+            user['playlist'] = playlist
+        return user
+    else:
+        return None
 
 if data['Users'] is None:
     users = []
     u = account.users()[1]
     for u in account.users():
-        user = {}
-        if input("Do you want to manage the user '"+ u.title +"'? (y/n): ") == 'y':
-            user['username'] = u.title
-            user['gender'] = input("What is the gender of '"+ u.title +"'? (M/F/both): ")
-            birthday = input("What is the birthdate of '"+ u.title +"'? ENTER to skip (YYYY-MM-DD): ")
-            if birthday == '':
-                age = input("Do you want an age appropriate cutoff for the account '"+ u.title +"'? (ie. 13): ")
-                if age != '':
-                    user['age'] = int(age)
-            else:
-                user['dob'] = str_to_date(birthday)
-            playlist = input("What is the name of the playlist to approve movies for the account '"+ u.title +"'? ENTER to skip: ")
-            if playlist != '':
-                user['playlist'] = playlist
+        user = input_user_data(u)
+        if user is not None:
             users.append(user)
     data['Users'] = users
 
+prompt = data['Run'].get('prompt_user_input')
+if prompt is None:
+    data['Run'].update({'prompt_user_input':False})
+elif prompt is True:
+    users = data['Users']
+    for u in account.users():
+        if u.title not in [i['username'] for i in users]:
+            user = input_user_data(u)
+            if user is not None:
+                users.append(user)
+    data['Users'] = users
+    data['Run'].update({'prompt_user_input':False})
 
 with open(settings, "w") as f:
     yaml.dump(data,f)

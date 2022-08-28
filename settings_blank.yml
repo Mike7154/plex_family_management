@@ -14,7 +14,8 @@ Run:
   run_col_labels: true                                      # -This adds movie labels to collections. So users who can see a movie can also see that collection
   run_auto_approve: true                                    # -This will automaically approve labels based on each users age. Every kid will get approved their age
   CLEAN_LIBRARY: false                                      # THIS WILL REMOVE ALL COMMON SENSE MEDIA INFORMATION AND TAGS AND UNLOCK THE SUMMARY FIELDS
-
+  prompt_user_input: false                                  # If true, this will run through existing users and prompt for input on the next run
+  
 Labels:
   unapprove_playlist:                          # -Movies added to this playlist will become unapproved from everyone
   approve_playlist: Approve_All                             # -Movies added to this playlist will be approved for 1+
