@@ -1,0 +1,71 @@
+Login: #You can run the script and it will ask you to input all of these if they are blank
+  plex_email: m6611022+code@gmail.com
+  plex_password:
+  plex_server: Mike's Media
+  libraries:
+  - Movies
+  - TV Shows
+
+
+Users: #Leaving the user section blank will prompt for input for existing user accounts. Each user must have at least a username and (dob or age)
+- username: User 1
+  gender: M
+  dob: 2009-09-18
+  playlist: Aprrove_User1
+- username: John
+  gender: M
+  dob: 2017-06-12
+  playlist: Approve_John
+- username: Guest
+  gender: both
+  age: 13
+- username: Kids
+  gender: both
+  age: 5
+- username: Sarah
+  gender: F
+  dob: 2010-09-24
+  playlist: Approve_Sarah
+- username: Luke
+  gender: M
+  dob: 2019-05-21
+  playlist: Approve_Luke
+
+#Which sections to run?
+Run:
+  run_common_sense_media: true                              # -This tells whether or not you want to add common sense media data to movie summaries
+  approve_common_sense_media_ages: true                     # -This will add a label for the age recommended by common sense media when label is missing THIS MAY AUTO APPROVE UNAPPROVED ITEMS UNLESS YOU USE THE unapprove_label BELOW OR ADD YOUR OWN AGE LABEL (ie. 18+ etc)
+  run_playlist_approve: true                                # -This tells whether to approve movies that are added to a users playlist.
+  run_col_labels: true                                      # -This adds movie labels to collections. So users who can see a movie can also see that collection
+  run_auto_approve: true                                    # -This will automaically approve labels based on each users age. Every kid will get approved their age
+  CLEAN_LIBRARY: false                                      # THIS WILL REMOVE ALL COMMON SENSE MEDIA INFORMATION AND TAGS AND UNLOCK THE SUMMARY FIELDS
+
+Labels:
+  unapprove_playlist: Unapprove_All                          # -Movies added to this playlist will become unapproved from everyone
+  approve_playlist: Approve_All                             # -Movies added to this playlist will be approved for 1+
+  unapprove_label: Unapproved                               # - This is the unapprove label. If blank, common sense media might add it back.
+  use_unlabeled_label: true                                 # - I like to add an "unlabeled" label so I can see all the movies that don't have a age label
+  # - Below will append text to the beginning and end of an age label. Default label will be age (ie. 4+, 5+_girl, 10+). You can se this to "+" to make it 4+, 5+girl, 10+ if you want
+  age_label_prefix:
+  age_label_suffix: +
+  #The settings below allow you to have more control over gender-specific labels. Any user with gender 'both' will be approved for both gendered items
+  #note that you have to manually label movies with gendered labels if you want to use these
+  gender_specific: true
+  gender_specific_txt:
+  - _girl
+  - _boy
+
+Misc:
+  days_early: 0                                            # - How many days before birthday should new age be approved?
+  offset_playlist_approve: 0                               # -Just something I use personally. If you add a movie to a users playlist, it will label the movie with that username and age+offset (set to -1 to only add a username label)
+  update_collection_sync_freq: 7                           # - Updating the collection labels takes a while, so I choose not to update it every day
+  ignore_prefix:                                             #ignore collections with prefix
+  hash:  # This will fill in automatically
+
+
+
+CSM:
+  parents_review: false                                   #When true this will use the parents recommended ages. When false it will use the one from Common Sense. (Parents usually recommend 0 to 2 yeras older)
+  extra_label: Review                                      #Any movie that get's an age tag from Common sense will also get this tag as well
+  update_old_summaries: true
+  update_age_factor: 2                                    # - It will update if the movie age / summary age is less than this factor. <=1 will never update.

@@ -5,7 +5,6 @@ import re
 import time
 from bs4 import BeautifulSoup
 from datetime import datetime
-from settings import *
 from general_functions import *
 
 
@@ -23,7 +22,7 @@ def text_add(str, add, pretext="\n"):
     return str + pretext + add
 
 
-def build_url(movie_title, lib_type, dict=csm_URLs):
+def build_url(movie_title, lib_type, dict, library_types = ['movie', 'show']):
     base_url = dict.get('base')
     if lib_type == library_types[0]:
         base_url = dict.get('movie')
@@ -88,7 +87,7 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
     return urls
 
 #url = "https://www.commonsensemedia.org/movie-reviews/dc-league-of-super-pets"
-def scrape_CSM_page(movie_dict, page):
+def scrape_CSM_page(movie_dict, page, parents_review = False):
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
         to_know = cl_search_txt(soup, "div[class^=review-view-parents-need-know]")
@@ -131,7 +130,7 @@ def scrape_CSM_page(movie_dict, page):
     return movie_dict
 
 
-def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # Download information from Common Sense media
+def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict = {}, update_age_factor = 1, library_types = ['movie', 'show'], parents_review = False):  # Download information from Common Sense media
     updated = movie_dict.get('updated')
     if updated is not None:  # Skip the movie if it's been updated recent enough. Whether or not found/verified
         updated = datetime.strptime(updated, '%Y-%m-%d')
@@ -157,7 +156,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         rep = 2
         url = None
         page = None
-        URL = build_url(movie.title, lib_type, url_dict)
+        URL = build_url(movie.title, lib_type, url_dict, library_types)
         backup_url = None
         print("searching " + movie.title + " in common sense media")
         if lib_type == library_types[0]:
@@ -176,7 +175,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
                 print(movie.title + ' search had no verified results, trying a shorter search')
                 m_title = re.sub("The ", "", movie.title)
                 m_title = movie.title[0:7]
-                URL = build_url(m_title, lib_type, url_dict)
+                URL = build_url(m_title, lib_type, url_dict, library_types)
                 urls = get_search_results(URL, find_u, url_dict, urls)
                 rep = rep - 1
             else:
@@ -199,7 +198,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict=csm_URLs):  # 
         movie_dict.update({"verified": False})
         update_log(movie.title + ": Unverified IMDb match")
         print(movie.title + " was pulled in but the match could not be verified")
-    movie_dict = scrape_CSM_page(movie_dict, page)
+    movie_dict = scrape_CSM_page(movie_dict, page, parents_review)
     return movie_dict
 
 
@@ -215,7 +214,7 @@ def check_csm(movie):
     return "[Common Sense Media]" in movie.summary
 
 
-def should_i_get_csm(movie):
+def should_i_get_csm(movie, update_old_summaries = True, update_age_factor = 1):
     b = False
     if check_csm(movie) is False:
         b = True
@@ -223,7 +222,7 @@ def should_i_get_csm(movie):
         if update_old_summaries is True:
             m_age = get_age(movie.originallyAvailableAt)
             s_age = CSM_age(movie.summary)
-            if m_age/s_age < update_age_factor or s_age > 5:
+            if m_age/s_age < update_age_factor or s_age > 10:
                 b = True
     return b
 
@@ -242,16 +241,3 @@ def remove_csm(movie):
         s = summary[0:start]+summary[end:len(summary)]
         s = s.strip()
     return s
-
-
-def CSM_approve_age(movie, lib_type='movie', url_dict=csm_URLs):  # Download information from Common Sense media
-    page = CSM_get_page(movie, lib_type, dict)
-    print(page.status_code)
-    if page is None:
-        return None
-    if page.status_code == 200:
-        print("good")
-    else:
-        print("ERROR BAD STATUS CODE")
-        print(URL)
-        return None

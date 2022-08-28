@@ -1,13 +1,50 @@
 import json
 from datetime import datetime
+import re
+import urllib.parse
+# -------------------------------------------------------------------------
 
+
+class User:
+    def __init__(self, username, gender, dob, age, playlist):
+        self.username = username
+        self.gender = gender
+        self.dob = dob
+        self.age = age
+        self.playlist = playlist
+# -------------------------------------------------------------------------
+
+def combine_unique(list1, list2):
+    list = list1
+    list.extend(list2)
+    newlist = []
+    for x in list:
+        if x not in newlist:
+            newlist.append(x)
+    return newlist
+
+def build_filter(text, labels):
+    text = urllib.parse.unquote(text)
+    text = re.split(r'[&|]', text)
+    filter = {}
+    i = text[0]
+    for i in text:
+        pair = i.split("=")
+        filter.update({pair[0]:pair[1].split(",")})
+    label_filter = filter.get("label")
+    if label_filter is None:
+        label_filter = labels
+    else:
+        label_filter = combine_unique(label_filter, labels)
+    filter.update({"label":label_filter})
+    return filter
 
 def str_to_date(str):
-    return datetime.strptime(str, '%Y-%m-%d')
+    return datetime.strptime(str, '%Y-%m-%d').date()
 
 
 def get_age(date):
-    age = datetime.now()-date
+    age = datetime.now().date()-date
     age = age.total_seconds()
     age = age/3600
     age = age/24

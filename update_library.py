@@ -1,18 +1,9 @@
 # pylama:ignore=W0401
-
 import csmedia
-import plex_functions
-from settings import *
 from general_functions import *
 from datetime import datetime
 from datetime import timedelta
-now = datetime.now()
-plex = plex_functions.plex_connect()
-
-print(plex)
-
-
-
+from load_settings import *
 
 
 ##################################################
@@ -21,20 +12,26 @@ print(plex)
 # reload(plex_functions)
 # library = "Movies"
 # movie = all_movies[388]
+age_labels = [unapprove_label]
+age_labels.extend(plex_functions.build_age_labels(25, gender="both", gender_specific = gender_specific, age_label_prefix = age_label_prefix, age_label_suffix = age_label_suffix, gender_specific_txt = gender_specific_txt))
 ####################################################################################################
 # Approve labels
 # If setting file allows. this will allow labels that match the child's age.
 # Update the usernames and birthdays in the settings
-account = plex_functions.plex_account()
-for u in users['users']:
-    labels = plex_functions.get_user_labels(u)
-    username = u['username']
+
+
+for u in users:
+    labels = plex_functions.get_user_labels(u, days_early, gender_specific, age_label_prefix, age_label_suffix, gender_specific_txt)
+    username = u.username
     print(username)
-    if plex_functions.user_exists(username) is False:
+    if plex_functions.user_exists(username, account) is False:
         account.createHomeUser(username, plex, libraries)
-        account = plex_functions.plex_account()
+        account = plex_functions.plex_account(pe, pp)
     user = account.user(username)
-    account.updateFriend(user, plex, filterMovies={'label': labels}, filterTelevision={'label': labels})
+    text = user.filterMovies
+    m_filter = build_filter(user.filterMovies, labels)
+    t_filter = build_filter(user.filterTelevision, labels)
+    account.updateFriend(user, plex, filterMovies=m_filter, filterTelevision=t_filter)
 
 ###############################################################
 #library = libraries[0]
@@ -61,11 +58,14 @@ for library in libraries:
     if run_common_sense_media is True and CLEAN_LIBRARY is False:
         for movie in movies_to_run:
             # print(movie.title)
-            if csmedia.should_i_get_csm(movie) is True:
+            if c % 15 == 14:
+                write_dict(movie_dict_file, movie_dict)
+                print("saved movie_data")
+            if csmedia.should_i_get_csm(movie, update_old_summaries, update_age_factor) is True:
                 if movie.guid not in movie_dict:
                     movie_dict.update({movie.guid: {'verified': False}})
                 m_dict = movie_dict.get(movie.guid)
-                m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type)
+                m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type, csm_URLs, update_age_factor, library_types, parents_review)
                 csm = m_dict.get('cs_summary')
                 if csm is not None:
                     s = csmedia.remove_csm(movie)
@@ -86,15 +86,19 @@ for library in libraries:
     # the recommended age from common sense media
     c = 0
     if approve_common_sense_media_ages is True and CLEAN_LIBRARY is False:
-        unlabeled_movies = plex_functions.get_unlabeled_movies(movies)
+        labs_to_check = age_labels
+        unlabeled_movies = plex_functions.get_unlabeled_movies(movies, labs_to_check)
         movies_to_run = unlabeled_movies
         print("there are " + str(len(movies_to_run)) + " Unlabeled moves that I will search for common sense media ages")
         for movie in movies_to_run:
+            if c % 15 == 0:
+                write_dict(movie_dict_file, movie_dict)
+                print("saving movie data")
             m_dict = movie_dict.get(movie.guid)
             if m_dict is None:
                 movie_dict.update({movie.guid: {'verified': False}})
                 m_dict = movie_dict.get(movie.guid)
-                m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type)
+                m_dict = csmedia.CSM_get(movie, m_dict, movies, library_type, csm_URLs, update_age_factor, library_types, parents_review)
                 movie_dict.update({movie.guid: m_dict})
             age = m_dict.get('cs_age')
             if age is not None:
@@ -127,8 +131,10 @@ for library in libraries:
                 pl.removeItems(i)
             pl = movies.playlist(unapprove_playlist)
             items = pl.items()
-            user_labels = [u.title for u in account.users()]
-            plex_functions.clear_labels(items, unapprove_label, "", user_labels)
+            user_labels = [u.username for u in users]
+            labs_to_check = user_labels
+            labs_to_check.extend(age_labels)
+            plex_functions.clear_labels(items, labs_to_check, unapprove_label)
             pl = movies.playlist(unapprove_playlist)
             items = pl.items()
             pl.removeItems(items)
@@ -151,15 +157,16 @@ for library in libraries:
         else:
             print("No unapprove playlist entered. Skipping")
         # ------------------------------------------------------------------------
-
         # User Playlists
-        for u in users['users']:
-            playlist = u['playlist']
-            username = u['username']
-            print("approving " + playlist + " movies for " + username)
+        for u in users:
+            playlist = cblank_text(u.playlist)
+            username = u.username
 
-            bday = plex_functions.str_to_date(u['dob'])
-            age = round(plex_functions.get_age(bday)-0.49999)
+            bday = u.dob
+            if bday is None:
+                age = u.age
+            else:
+                age = round(plex_functions.get_age(bday)-0.49999)
             if offset_playlist_approve < 0:
                 labels = [username]
             else:
@@ -173,17 +180,19 @@ for library in libraries:
                     pl.removeItems(i)
                 pl = movies.playlist(playlist)
                 items = pl.items()
+                print("approving " + str(len(items)) + " items in " + playlist + " movies for " + username)
                 plex_functions.add_items_labels(items, labels)
                 plex_functions.remove_items_labels(items, [unapprove_label])
                 pl = movies.playlist(playlist)
                 items = pl.items()
                 pl.removeItems(items)
             else:
-                print("No user playlist entered. Skipping")
+                print("No user playlist entered. Skipping " + username)
 
     ############################################################
     # Remove unlabeled tag for any movie with age labels
-    labeled_movies = plex_functions.get_labeled_movies(movies)
+    labs_to_check = age_labels
+    labeled_movies = plex_functions.get_labeled_movies(movies, labs_to_check)
     movie_list = list(set(movies.search(label="Unlabeled")).intersection(labeled_movies))
     for movie in movie_list:
         print(movie.title)
@@ -198,28 +207,30 @@ for library in libraries:
     ####################################################################################################
     # Clean Library - Remove common sense labels and Summaries
     if CLEAN_LIBRARY is True:
+        labels_to_clean = age_labels
+        labeled_movies = plex_functions.get_labeled_movies(movies, labels_to_clean)
+        plex_functions.clear_labels(labeled_movies, labels_to_clean)
         for movie in all_movies:
             if "[Common Sense Media]" in movie.summary:
                 print("cleaning " + movie.title)
                 s = csmedia.remove_csm(movie)
                 movie.editSummary(s, locked=False)
-                for label in plex_functions.list_movie_age_labels(movie):
+                for label in plex_functions.list_movie_age_labels(movie, labels_to_clean):
                     movie.removeLabel(label).reload()
         update_log("Cleaned Libraries, it's a good idea to refresh all metadata")
 
     ####################################################################################################
     # Add and remove collection labels
-
     if run_col_labels is True:
         collections = movies.search(libtype='collection')
         col = collections[20]
         c = 0
-        dir(col)
-        user_labels = [u.title for u in account.users()]
+        labs_to_sync = [u.title for u in account.users()]
+        labs_to_sync.extend(age_labels)
         for col in collections:
             # cont = False
             print(col.title)
-            if col.titleSort.startswith(ignore_prefix):
+            if col.titleSort.startswith(tuple(ignore_prefix)) and ignore:
                 print("--skipping due to collection prefix rule")
                 next
             last_run = movie_dict.get(col.guid)
@@ -242,7 +253,7 @@ for library in libraries:
                 # if cont is False:
                 #    continue
                 for i in items:
-                    i_labels.extend(plex_functions.list_movie_age_labels(i, user_labels))
+                    i_labels.extend(plex_functions.list_movie_age_labels(i, labs_to_sync))
                 i_labels = list(set(i_labels))
                 c_labels = plex_functions.list_movie_age_labels(col, user_labels)
                 labels_to_add = difference(i_labels, c_labels)
