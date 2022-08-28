@@ -24,19 +24,22 @@ def combine_unique(list1, list2):
     return newlist
 
 def build_filter(text, labels):
-    text = urllib.parse.unquote(text)
-    text = re.split(r'[&|]', text)
-    filter = {}
-    i = text[0]
-    for i in text:
-        pair = i.split("=")
-        filter.update({pair[0]:pair[1].split(",")})
-    label_filter = filter.get("label")
-    if label_filter is None:
-        label_filter = labels
+    if text == '':
+        filter = {'label': labels}
     else:
-        label_filter = combine_unique(label_filter, labels)
-    filter.update({"label":label_filter})
+        text = urllib.parse.unquote(text)
+        text = re.split(r'[&|]', text)
+        filter = {}
+        i = text[0]
+        for i in text:
+            pair = i.split("=")
+            filter.update({pair[0]:pair[1].split(",")})
+        label_filter = filter.get("label")
+        if label_filter is None:
+            label_filter = labels
+        else:
+            label_filter = combine_unique(label_filter, labels)
+        filter.update({"label":label_filter})
     return filter
 
 def str_to_date(str):
