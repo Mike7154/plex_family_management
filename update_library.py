@@ -77,6 +77,7 @@ for library in libraries:
                 else:
                     print(movie.title + ": Missing from Common Sense Media")
                 movie_dict.update({movie.guid: m_dict})
+                write_dict(movie_dict_file, movie_dict)
             # else:
                 # print("Should skip. Common sense media already updated or not required")
     write_dict(movie_dict_file, movie_dict)
