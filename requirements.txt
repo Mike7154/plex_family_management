@@ -8,3 +8,4 @@ plexapi
 cryptocode
 ruamel.yaml
 numpy
+openai
