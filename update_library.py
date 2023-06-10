@@ -58,7 +58,7 @@ for library in libraries:
     if run_common_sense_media is True and CLEAN_LIBRARY is False:
         for movie in movies_to_run:
             # print(movie.title)
-            if c % 15 == 14:
+            if c % 15 == 0:
                 write_dict(movie_dict_file, movie_dict)
                 print("saved movie_data")
             if csmedia.should_i_get_csm(movie, update_old_summaries, update_age_factor) is True:
