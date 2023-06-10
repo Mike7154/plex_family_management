@@ -35,6 +35,8 @@ if data['Misc']['hash'] is None:
     password = input("Please type your plex password (it will only be stored locally with basic encryption): ")
     data['Misc']['hash'] = cryptocode.encrypt(password, data['Login']['plex_email'])
     data['Login']['plex_password'] = None
+if data['Misc']['openai_api'] is None:
+    data['Misc']['openai_api'] = input("Enter your openai api key. This is used to make scraping commonsense media much easier")
 
 pe = data['Login']['plex_email']
 pp = cryptocode.decrypt(data['Misc']['hash'], pe)

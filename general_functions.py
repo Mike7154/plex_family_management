@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 import re
 import urllib.parse
+import ruamel.yaml
 # -------------------------------------------------------------------------
 
 
@@ -74,9 +75,17 @@ def write_dict(file, dict):
 
 def update_log(text):
     now = datetime.now()
+    print(text)
     file = "logs.txt"
     timestr = now.strftime('%m/%d/%Y %H:%M:%S')
     log_text = timestr + " : " + text
     f = open(file, "a")
     f.write(log_text+'\n')
     f.close()
+
+def load_setting(section, setting, settings_file = "settings.yml"):
+    yaml = ruamel.yaml.YAML()
+    yaml.preserve_quotes = True
+    with open(settings_file) as fp:
+        data = yaml.load(fp)
+    return data[section][setting]

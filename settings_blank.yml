@@ -37,6 +37,8 @@ Misc:
   update_collection_sync_freq: 7                           # - Updating the collection labels takes a while, so I choose not to update it every day
   ignore_prefix:                                             #ignore collections with prefix
   hash:  # This will fill in automatically
+  openai_api:
+  gpt_model: gpt-3.5-turbo
 
 
 

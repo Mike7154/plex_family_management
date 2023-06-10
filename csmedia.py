@@ -1,13 +1,15 @@
 # pylama:ignore=W0401,W0612
 
+from typing import Container
 import requests
 import re
 import time
 from bs4 import BeautifulSoup
 from datetime import datetime
 from general_functions import *
+import openai
 
-
+#id="review-view-content-grid-modal"
 def cl_search_txt(soup, class_str, index = 0):
     container = soup.select(class_str)
     return container[index].text
@@ -86,14 +88,46 @@ def get_search_results(URL, url_match, url_dict, skip_urls=[]):
             urls.append(url)
     return urls
 
+def get_pntk(selector):
+    sel = str(selector)
+    apikey = load_setting("Misc","openai_api")
+    gpt_model = load_setting("Misc","gpt_model")
+    openai.api_key = apikey
+    gpt_res = openai.ChatCompletion.create(
+        model=gpt_model,
+        messages=[
+            {"role": "system", "content": "There is a paragraph in the following HTML code that summarizes what parents need to know. Only return the paragraph as plain text without html tags or formatting."},
+            {"role": "user", "content": sel}
+        ]
+    )
+    tokens = str(gpt_res.usage.total_tokens)
+    update_log("Ran a gpt request. It costed " + tokens + " tokens.")
+    return gpt_res.choices[0].message.content
+
+def get_content(selector):
+    sel = str(selector)
+    gpt_model = load_setting("Misc","gpt_model")
+    apikey = load_setting("Misc","openai_api")
+    gpt_res = openai.ChatCompletion.create(
+        model = gpt_model,
+        messages=[
+            {"role": "system", "content": "You will be provided HTML string that contains the information you need for the following task. I want you to return information in the following format only. Do not include any extra text before or after. Replace <amount> with 'a lot' or 'a little', or 'not mentioned' etc. which can be found in the html.Return only plain text without html"},
+            {"role": "system", "content": "Here is a sample of the format I want.\n[Positive Messages - <amount>] Write the positive messages paragraph here\n[Positive Role Models - <amount>] Write the positive role model <p> here\n[Violance & Scariness - <amount>] paragraph\n[Sex, Romance & Nudity - <amount>] \n[Language - <amount>] paragraph\n[Diverse Representation - <amount>] paragraph\n[Drinking, Drugs & Smoking - <amount>] paragraph\n [Educational Value - <amount>] paragraph"},
+            {"role": "user", "content": sel}
+        ]    
+    )
+    tokens = str(gpt_res.usage.total_tokens)
+    update_log("Ran a gpt request. It costed " + tokens + " tokens.")
+    return gpt_res.choices[0].message.content
+
 #url = "https://www.commonsensemedia.org/movie-reviews/dc-league-of-super-pets"
 def scrape_CSM_page(movie_dict, page, parents_review = False):
     if page.status_code == 200:
+        selector = "#review-view-content-grid-modal" #if this code breaks. Make sure the selector in the website didnt change
         soup = BeautifulSoup(page.content, "html.parser")
-        to_know = cl_search_txt(soup, "div[class^=review-view-parents-need-know]")
-        to_know = restrip(to_know, "Show more")
-        to_know = restrip(to_know, "\n\n", "\n")
-        to_know = restrip(to_know, "\n\n", "\n")
+        s = soup.select(selector)
+        to_know = get_pntk(s)
+        content_ratings = get_content(s)
         # print(to_know)
         if parents_review == True:
             age = cl_search_txt(soup, "span[class^=rating__age]",1)
@@ -107,17 +141,8 @@ def scrape_CSM_page(movie_dict, page, parents_review = False):
         text = "[Common Sense Media]"
         text = text_add(text, age, " ")
         text = text_add(text, to_know, "\n")
+        text = text_add(text, content_ratings, "\n")
         # print(text)
-        for d in div:
-            x = restrip(d.text, "Not present", "")
-            s = d["data-text"]
-            s = re.sub('<[^>]*>', '', s)
-            s = re.sub('Did you know [^?.!]*[?.!]', '', s)
-            s = re.sub('Adjust limits [^?.!]*[?.!]', '', s)
-            s = restrip(s, "Join now")
-            s = s.strip()
-            text = text_add(text, x, "\n|")
-            text = text_add(text, s, "|: ")
         now = datetime.now()
         text = restrip(text, "\n\n\n", "\n")
         text = restrip(text, "\n\n", "\n")
