@@ -164,7 +164,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict = {}, update_a
             oaa = datetime.strptime('2010-01-01', '%Y-%m-%d')
         m_age = get_age(oaa)
         s_age = get_age(updated)
-        if m_age/s_age > update_age_factor and s_age < 5:
+        if m_age/s_age > update_age_factor:
             return movie_dict
     updated = datetime.now()
     imdb = [guid.id for guid in movie.guids if 'imdb' in guid.id]
