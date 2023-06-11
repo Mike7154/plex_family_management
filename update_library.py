@@ -221,7 +221,6 @@ for library in libraries:
     # Add and remove collection labels
     if run_col_labels is True:
         collections = movies.search(libtype='collection')
-        col = collections[20]
         c = 0
         labs_to_sync = [u.title for u in account.users()]
         labs_to_sync.extend(age_labels)
