@@ -167,7 +167,6 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict = {}, update_a
         if m_age/s_age > update_age_factor:
             return movie_dict
     updated = datetime.now()
-    movie_dict.update({"updated": updated.strftime('%Y-%m-%d')})
     imdb = [guid.id for guid in movie.guids if 'imdb' in guid.id]
     if len(imdb) == 0:
         update_log(movie.title + " Doesn't have an IMDbId in Plex")
@@ -225,6 +224,7 @@ def CSM_get(movie, movie_dict, movies, lib_type='movie', url_dict = {}, update_a
         update_log(movie.title + ": Unverified IMDb match")
         print(movie.title + " was pulled in but the match could not be verified")
     movie_dict = scrape_CSM_page(movie_dict, page, parents_review)
+    movie_dict.update({"updated": updated.strftime('%Y-%m-%d')})
     return movie_dict
 
 
